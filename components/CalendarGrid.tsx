@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import MonthNavigation from "./MonthNavigation";
 import WeekHeader from "./WeekHeader";
 import DayGrid from "./DayGrid";
+import EntryDetailsModal from "./EntryDetailsModal"; // Importing the modal component
 
 type CalendarGridProps = {
   userId: number;
@@ -10,12 +11,14 @@ type CalendarGridProps = {
 
 const CalendarGrid = ({ userId }: CalendarGridProps) => {
   const [entries, setEntries] = useState<{ [key: string]: boolean }>({});
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [entryDetails, setEntryDetails] = useState<any>(null);
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
-  const minDate = new Date(2025, 0, 1); // Jan 1, 2025
+  const minDate = new Date(2025, 1, 1);
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Normalize time for comparison
-  const maxMonth = new Date(today.getFullYear(), today.getMonth(), 1); // Start of this month
+  today.setHours(0, 0, 0, 0);
+  const maxMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
   const isAtMinMonth = currentMonth <= minDate;
   const isAtMaxMonth =
@@ -26,15 +29,13 @@ const CalendarGrid = ({ userId }: CalendarGridProps) => {
     const fetchEntries = async (userId: number) => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:5000/entries?user_id=${userId}`
+          `http://127.0.0.1:5000/entries/days?user_id=${userId}`
         );
         const data = await response.json();
 
         const entryMap: { [key: string]: boolean } = {};
-        data.data.forEach((entry: { timestamp: string }) => {
-          const entryDate = new Date(entry.timestamp);
-          const formattedDate = entryDate.toISOString().split("T")[0];
-          entryMap[formattedDate] = true;
+        data.data.forEach((date: string) => {
+          entryMap[date] = true;
         });
 
         setEntries(entryMap);
@@ -80,15 +81,23 @@ const CalendarGrid = ({ userId }: CalendarGridProps) => {
     }
   };
 
-  const handleDayPress = (day: number) => {
+  const handleDayPress = async (day: number) => {
     const formattedDate = formatDate(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
       day
     );
     if (entries[formattedDate]) {
-      // Navigate to entry details or show modal for the day
-      console.log(`Show entries for ${formattedDate}`);
+      try {
+        const response = await fetch(
+          `http://127.0.0.1:5000/entries/day?user_id=${userId}&date=${formattedDate}`
+        );
+        const data = await response.json();
+        setEntryDetails(data.data);
+        setModalVisible(true);
+      } catch (error) {
+        console.error("Error fetching entry details:", error);
+      }
     }
   };
 
@@ -119,6 +128,12 @@ const CalendarGrid = ({ userId }: CalendarGridProps) => {
         handleNextMonth={handleNextMonth}
         isAtMinMonth={isAtMinMonth}
         isAtMaxMonth={isAtMaxMonth}
+      />
+
+      <EntryDetailsModal
+        visible={modalVisible}
+        entryDetails={entryDetails}
+        onClose={() => setModalVisible(false)}
       />
     </View>
   );
