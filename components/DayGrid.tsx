@@ -19,63 +19,77 @@ const DayGrid = ({
   currentMonth,
   handleDayPress,
 }: DayGridProps) => {
-  const formatDate = (year: number, month: number, day: number) => {
-    return `${year}-${month + 1 < 10 ? `0${month + 1}` : month + 1}-${
-      day < 10 ? `0${day}` : day
-    }`;
+  const getFormattedDate = (day: number) => {
+    return `${currentMonth.getFullYear()}-${
+      currentMonth.getMonth() + 1 < 10
+        ? `0${currentMonth.getMonth() + 1}`
+        : currentMonth.getMonth() + 1
+    }-${day < 10 ? `0${day}` : day}`;
   };
 
-  return (
-    <View style={styles.fixedHeightGrid}>
-      <View style={styles.daysGrid}>
-        {Array.from({ length: startDay }).map((_, index) => (
-          <View key={index} style={styles.dayCell} />
-        ))}
+  const totalDays = days.length;
+  const totalCells = totalDays + startDay;
 
-        {days.map((day) => {
-          const dateObj = new Date(
-            currentMonth.getFullYear(),
-            currentMonth.getMonth(),
-            day
-          );
-          const isFuture = dateObj > today;
-          const formattedDate = formatDate(
-            currentMonth.getFullYear(),
-            currentMonth.getMonth(),
-            day
-          );
-          const hasEntry = entries[formattedDate];
+  const generateDayCells = () => {
+    const cells = [];
 
-          return (
-            <DayCell
-              key={day}
-              day={day}
-              formattedDate={formattedDate}
-              hasEntry={hasEntry}
-              isFuture={isFuture}
-              onPress={() => handleDayPress(day)}
-            />
-          );
-        })}
-      </View>
-    </View>
-  );
+    for (let i = 0; i < startDay; i++) {
+      cells.push(<View key={`empty-${i}`} style={styles.emptyDayCell} />);
+    }
+
+    days.forEach((day, i) => {
+      const formattedDate = getFormattedDate(day);
+      const hasEntry = entries[formattedDate];
+      const isFuture = new Date(formattedDate) > today;
+
+      cells.push(
+        <DayCell
+          key={day}
+          day={day}
+          formattedDate={formattedDate}
+          hasEntry={hasEntry}
+          isFuture={isFuture}
+          onPress={() => handleDayPress(day)}
+        />
+      );
+    });
+
+    const remainingCells = totalCells % 7;
+    if (remainingCells !== 0) {
+      for (let i = remainingCells; i < 7; i++) {
+        cells.push(<View key={`empty-end-${i}`} style={styles.emptyDayCell} />);
+      }
+    }
+
+    const dayRows = [];
+    for (let i = 0; i < cells.length; i += 7) {
+      dayRows.push(
+        <View key={`row-${i}`} style={styles.row}>
+          {cells.slice(i, i + 7)}
+        </View>
+      );
+    }
+
+    return dayRows;
+  };
+
+  return <View style={styles.gridContainer}>{generateDayCells()}</View>;
 };
 
 const styles = StyleSheet.create({
-  fixedHeightGrid: {
-    height: 5 * 60,
+  gridContainer: {
+    flexDirection: "column",
+    width: "100%",
+    height: 350,
   },
-  daysGrid: {
+  row: {
     flexDirection: "row",
-    flexWrap: "wrap",
+    justifyContent: "space-between",
     width: "100%",
   },
-  dayCell: {
+  emptyDayCell: {
     width: "14%",
-    padding: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    height: 40,
   },
 });
 

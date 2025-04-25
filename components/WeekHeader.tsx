@@ -5,9 +5,9 @@ const WeekHeader = () => {
   return (
     <View style={styles.weekRow}>
       {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, index) => (
-        <Text key={index} style={styles.weekDay}>
-          {day}
-        </Text>
+        <View key={index} style={styles.weekDayWrapper}>
+          <Text style={styles.weekDay}>{day}</Text>
+        </View>
       ))}
     </View>
   );
@@ -16,15 +16,23 @@ const WeekHeader = () => {
 const styles = StyleSheet.create({
   weekRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    flexWrap: "nowrap",
     width: "100%",
-    padding: 5,
+    marginBottom: 10,
+    justifyContent: "space-evenly",
   },
+  weekDayWrapper: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 4,
+  },
+
   weekDay: {
+    width: "100%",
     fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",
-    width: "14%",
   },
 });
 

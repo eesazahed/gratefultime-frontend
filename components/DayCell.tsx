@@ -47,17 +47,18 @@ const DayCell = ({
 
 const styles = StyleSheet.create({
   dayCell: {
-    width: "14%",
-    padding: 5,
+    flexBasis: "14%",
     alignItems: "center",
     justifyContent: "center",
+    padding: 4,
   },
   day: {
-    width: 40,
+    width: "100%",
     height: 40,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+    margin: 4,
   },
   dayText: {
     fontSize: 16,
