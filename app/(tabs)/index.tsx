@@ -6,8 +6,9 @@ import {
   Button,
   Text,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
-import prisma from "@/lib/prismaClient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type EntryKey =
   | "entry1"
@@ -29,6 +30,7 @@ export default function HomeScreen() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [promptResponse, setPromptResponse] = useState("");
   const [isLocked, setIsLocked] = useState(true);
+  const [hasSubmittedToday, setHasSubmittedToday] = useState(false);
 
   const [errors, setErrors] = useState<Errors>({
     entry1: "",
@@ -49,6 +51,7 @@ export default function HomeScreen() {
   useEffect(() => {
     checkIfUnlocked();
     generatePrompt();
+    checkResetTime();
   }, []);
 
   const checkIfUnlocked = () => {
@@ -60,6 +63,21 @@ export default function HomeScreen() {
     setIsLocked(!(now >= unlockTime && now <= midnight));
   };
 
+  const checkResetTime = async () => {
+    const resetTimeStr = await AsyncStorage.getItem("RESET_TIME");
+    if (!resetTimeStr) return;
+
+    const resetTime = new Date(resetTimeStr);
+    const now = new Date();
+
+    if (now < resetTime) {
+      setHasSubmittedToday(true);
+    } else {
+      setHasSubmittedToday(false);
+      await AsyncStorage.removeItem("RESET_TIME");
+    }
+  };
+
   const generatePrompt = () => {
     const randomPrompt =
       mockPromptList[Math.floor(Math.random() * mockPromptList.length)];
@@ -67,57 +85,66 @@ export default function HomeScreen() {
     setPromptResponse("");
   };
 
-  const validateFields = () => {
-    const newErrors: Errors = {
-      entry1: "",
-      entry2: "",
-      entry3: "",
-      promptResponse: "",
-      submission: "",
-    };
-
-    if (entries[0].trim() === "") {
-      newErrors.entry1 = "Please enter your first gratitude.";
-      setErrors(newErrors);
-      return false;
-    }
-
-    if (entries[1].trim() === "") {
-      newErrors.entry2 = "Please enter your second gratitude.";
-      setErrors(newErrors);
-      return false;
-    }
-
-    if (entries[2].trim() === "") {
-      newErrors.entry3 = "Please enter your third gratitude.";
-      setErrors(newErrors);
-      return false;
-    }
-
-    if (promptResponse.trim() === "") {
-      newErrors.promptResponse = "Please write a short reflection.";
-      setErrors(newErrors);
-      return false;
-    }
-
-    setErrors(newErrors);
-    return true;
-  };
-
   const saveEntries = async () => {
-    if (!validateFields()) return;
-
     try {
-      await prisma.gratitudeEntry.create({
-        data: {
+      const response = await fetch("http://127.0.0.1:5000/entries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: 1,
           entry1: entries[0],
           entry2: entries[1],
           entry3: entries[2],
-          prompt: aiPrompt,
-          response: promptResponse,
-        },
+          user_prompt: aiPrompt,
+          user_prompt_response: promptResponse,
+        }),
       });
 
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Server error:", data);
+
+        // Clear all previous errors and add the specific error from the response
+        const newErrors = {
+          entry1: "",
+          entry2: "",
+          entry3: "",
+          promptResponse: "",
+          submission: "",
+        };
+
+        // Map the specific error message to the field
+        if (data.message) {
+          // If the response includes an error message, assign it to the appropriate field
+          if (data.errorCode === "entry1") {
+            newErrors.entry1 = data.message;
+          } else if (data.errorCode === "entry2") {
+            newErrors.entry2 = data.message;
+          } else if (data.errorCode === "entry3") {
+            newErrors.entry3 = data.message;
+          } else if (data.errorCode === "promptResponse") {
+            newErrors.promptResponse = data.message;
+          } else {
+            newErrors.submission =
+              data.message || "There was an issue saving your entry.";
+          }
+        }
+
+        setErrors(newErrors);
+        return;
+      }
+
+      // Set reset time to next midnight
+      const resetTime = new Date();
+      resetTime.setDate(resetTime.getDate() + 1);
+      resetTime.setHours(0, 0, 0, 0);
+      await AsyncStorage.setItem("RESET_TIME", resetTime.toISOString());
+      setHasSubmittedToday(true);
+
+      // Clear form
       setEntries(["", "", ""]);
       setPromptResponse("");
       generatePrompt();
@@ -129,20 +156,28 @@ export default function HomeScreen() {
         submission: "",
       });
     } catch (error) {
-      console.error("Error saving entry:", error);
+      console.error("Network error:", error);
       setErrors((prev) => ({
         ...prev,
-        submission: "There was an issue saving your entry.",
+        submission: "Could not connect to server.",
       }));
     }
   };
 
-  if (isLocked) {
+  if (isLocked || hasSubmittedToday) {
     return (
       <View style={styles.centered}>
         <Text style={styles.lockedText}>
-          Your gratitude journal unlocks at 8:00 PM.
+          {hasSubmittedToday
+            ? "You've already journaled today. Come back tomorrow!"
+            : "Your gratitude journal unlocks at 8:00 PM."}
         </Text>
+
+        {!hasSubmittedToday && (
+          <TouchableOpacity onPress={() => setIsLocked(false)}>
+            <Text style={styles.unlockEarlyText}>Unlock early</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
@@ -208,11 +243,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 24,
   },
   lockedText: {
     fontSize: 16,
     textAlign: "center",
     color: "#888",
+    marginBottom: 12,
+  },
+  unlockEarlyText: {
+    fontSize: 10,
+    color: "#3498db",
+    marginTop: 48,
   },
   title: {
     fontSize: 22,
