@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import MonthNavigation from "./MonthNavigation";
 import WeekHeader from "./WeekHeader";
 import DayGrid from "./DayGrid";
-import EntryDetailsModal from "./EntryDetailsModal"; // Importing the modal component
+import EntryDetailsModal from "./EntryDetailsModal";
 
 type CalendarGridProps = {
   userId: number;

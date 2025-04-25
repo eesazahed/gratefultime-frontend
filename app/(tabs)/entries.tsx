@@ -3,8 +3,7 @@ import { View, StyleSheet } from "react-native";
 import CalendarGrid from "../../components/CalendarGrid";
 
 const CalendarScreen = () => {
-  // Assuming you have a user_id
-  const userId = 1; // Change to actual user ID from AsyncStorage or context
+  const userId = 1;
 
   return (
     <View style={styles.container}>
