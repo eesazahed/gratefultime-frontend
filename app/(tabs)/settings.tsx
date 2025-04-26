@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Settings = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const Settings = () => {
 
     try {
       await logout();
+      await AsyncStorage.removeItem("RESET_TIME");
       router.push("/");
     } catch (err) {
       setError("Error logging out. Please try again.");

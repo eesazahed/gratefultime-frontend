@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "expo-router";
 
 type Entry = {
   id: number;
@@ -27,33 +28,35 @@ const Profile = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchEntries = async () => {
-      try {
-        if (!token) {
-          console.error("JWT token not found");
-          return;
+  useFocusEffect(
+    useCallback(() => {
+      const fetchEntries = async () => {
+        try {
+          if (!token) {
+            console.error("JWT token not found");
+            return;
+          }
+
+          const response = await fetch(`http://localhost:5000/entries`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const json = await response.json();
+          setEntries(json.data);
+        } catch (err) {
+          console.error("Failed to fetch entries", err);
+        } finally {
+          setLoading(false);
         }
+      };
 
-        const res = await fetch(`http://localhost:5000/entries`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const json = await res.json();
-        setEntries(json.data);
-      } catch (err) {
-        console.error("Failed to fetch entries", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEntries();
-  }, [token]);
+      fetchEntries();
+    }, [token])
+  );
 
   const deleteEntry = async (id: number) => {
     try {

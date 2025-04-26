@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../context/AuthContext";
+import { useFocusEffect } from "expo-router";
 
 type EntryKey =
   | "entry1"
@@ -51,11 +52,13 @@ export default function Grateful() {
 
   const mockNotificationHour = 20;
 
-  useEffect(() => {
-    checkIfUnlocked();
-    generatePrompt();
-    checkResetTime();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      checkIfUnlocked();
+      generatePrompt();
+      checkResetTime();
+    }, [token])
+  );
 
   const checkIfUnlocked = () => {
     const now = new Date();
