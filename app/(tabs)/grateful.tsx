@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "../../context/AuthContext";
 
 type EntryKey =
   | "entry1"
@@ -25,7 +26,9 @@ type Errors = {
   submission: string;
 };
 
-export default function HomeScreen() {
+export default function Grateful() {
+  const { token } = useAuth();
+
   const [entries, setEntries] = useState(["", "", ""]);
   const [aiPrompt, setAiPrompt] = useState("");
   const [promptResponse, setPromptResponse] = useState("");
@@ -42,7 +45,7 @@ export default function HomeScreen() {
 
   const mockPromptList = [
     "What was one small moment that brought you peace today?",
-    "Think of someone you’re thankful for — why?",
+    "Think of someone you're thankful for — why?",
     "Describe a challenge today that turned out better than expected.",
   ];
 
@@ -86,14 +89,23 @@ export default function HomeScreen() {
   };
 
   const saveEntries = async () => {
+    if (!token) {
+      console.error("No token found");
+      setErrors((prev) => ({
+        ...prev,
+        submission: "User is not authenticated. Please log in.",
+      }));
+      return;
+    }
+
     try {
       const response = await fetch("http://127.0.0.1:5000/entries", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          user_id: 1,
           entry1: entries[0],
           entry2: entries[1],
           entry3: entries[2],
@@ -106,8 +118,6 @@ export default function HomeScreen() {
 
       if (!response.ok) {
         console.error("Server error:", data);
-
-        // Clear all previous errors and add the specific error from the response
         const newErrors = {
           entry1: "",
           entry2: "",
@@ -126,8 +136,7 @@ export default function HomeScreen() {
           } else if (data.errorCode === "promptResponse") {
             newErrors.promptResponse = data.message;
           } else {
-            newErrors.submission =
-              data.message || "There was an issue saving your entry.";
+            newErrors.submission = data.message;
           }
         }
 
@@ -140,7 +149,6 @@ export default function HomeScreen() {
       resetTime.setHours(0, 0, 0, 0);
       await AsyncStorage.setItem("RESET_TIME", resetTime.toISOString());
       setHasSubmittedToday(true);
-
       setEntries(["", "", ""]);
       setPromptResponse("");
       generatePrompt();
@@ -168,7 +176,6 @@ export default function HomeScreen() {
             ? "You've already journaled today. Come back tomorrow!"
             : "Your gratitude journal unlocks at 8:00 PM."}
         </Text>
-
         {!hasSubmittedToday && (
           <TouchableOpacity onPress={() => setIsLocked(false)}>
             <Text style={styles.unlockEarlyText}>Unlock early</Text>
@@ -196,9 +203,9 @@ export default function HomeScreen() {
                 setEntries(updated);
               }}
             />
-            {errors[errorKey] ? (
+            {errors[errorKey] && (
               <Text style={styles.errorText}>{errors[errorKey]}</Text>
-            ) : null}
+            )}
           </View>
         );
       })}

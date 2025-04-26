@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import MonthNavigation from "./MonthNavigation";
 import WeekHeader from "./WeekHeader";
 import DayGrid from "./DayGrid";
 import EntryDetailsModal from "./EntryDetailsModal";
+import { useAuth } from "../context/AuthContext";
 
-type CalendarGridProps = {
-  userId: number;
-};
-
-const CalendarGrid = ({ userId }: CalendarGridProps) => {
-  const [entries, setEntries] = useState<{ [key: string]: boolean }>({});
+const CalendarGrid = ({
+  entries,
+  currentMonth,
+  setCurrentMonth,
+}: {
+  entries: { [key: string]: boolean };
+  currentMonth: Date;
+  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+}) => {
+  const { token } = useAuth();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [entryDetails, setEntryDetails] = useState<any>(null);
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
   const minDate = new Date(2025, 1, 1);
   const today = new Date();
@@ -24,28 +28,6 @@ const CalendarGrid = ({ userId }: CalendarGridProps) => {
   const isAtMaxMonth =
     currentMonth.getFullYear() === maxMonth.getFullYear() &&
     currentMonth.getMonth() === maxMonth.getMonth();
-
-  useEffect(() => {
-    const fetchEntries = async (userId: number) => {
-      try {
-        const response = await fetch(
-          `http://127.0.0.1:5000/entries/days?user_id=${userId}`
-        );
-        const data = await response.json();
-
-        const entryMap: { [key: string]: boolean } = {};
-        data.data.forEach((date: string) => {
-          entryMap[date] = true;
-        });
-
-        setEntries(entryMap);
-      } catch (error) {
-        console.error("Error fetching entries:", error);
-      }
-    };
-
-    fetchEntries(userId);
-  }, [userId, currentMonth]);
 
   const firstDayOfMonth = new Date(
     currentMonth.getFullYear(),
@@ -88,11 +70,27 @@ const CalendarGrid = ({ userId }: CalendarGridProps) => {
       day
     );
     if (entries[formattedDate]) {
+      if (!token) {
+        console.error("No JWT token found");
+        return;
+      }
+
       try {
         const response = await fetch(
-          `http://127.0.0.1:5000/entries/day?user_id=${userId}&date=${formattedDate}`
+          `http://127.0.0.1:5000/entries/day?date=${formattedDate}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const data = await response.json();
+
+        if (!response.ok) {
+          console.error("Error fetching entry details:", data);
+          return;
+        }
+
         setEntryDetails(data.data);
         setModalVisible(true);
       } catch (error) {
