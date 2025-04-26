@@ -68,8 +68,8 @@ const Signup = () => {
         return;
       }
 
-      await login(data.token); // set token via context
-      router.push("/profile");
+      await login(data.token);
+      router.push("/");
     } catch (err) {
       console.error("Signup error:", err);
       setErrors((prev) => ({

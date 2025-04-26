@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import CalendarGrid from "../../components/CalendarGrid";
 import { useAuth } from "../../context/AuthContext"; // adjust the path if needed
 
-const CalendarScreen = () => {
+const Calendar = () => {
   const { token } = useAuth(); // get the token from context
   const [entries, setEntries] = useState<{ [key: string]: boolean }>({});
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CalendarScreen;
+export default Calendar;

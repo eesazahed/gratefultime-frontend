@@ -63,7 +63,7 @@ const Login = () => {
       }
 
       await login(data.token);
-      router.push("/profile");
+      router.push("/");
     } catch (err) {
       console.error("Login error:", err);
       setErrors((prev) => ({

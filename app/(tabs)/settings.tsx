@@ -21,7 +21,7 @@ const Settings = () => {
 
     try {
       await logout();
-      router.push("/login");
+      router.push("/");
     } catch (err) {
       setError("Error logging out. Please try again.");
       console.error("Logout error:", err);
