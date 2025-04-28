@@ -6,40 +6,44 @@ type DayCellProps = {
   formattedDate: string;
   hasEntry: boolean;
   isFuture: boolean;
+  isToday: boolean;
   onPress: () => void;
 };
 
 const DayCell = ({
   day,
-  formattedDate,
   hasEntry,
   isFuture,
+  isToday,
   onPress,
 }: DayCellProps) => {
+  const getDayStyle = () => {
+    if (hasEntry) {
+      return styles.hasEntry;
+    } else if (isToday) {
+      return styles.todayStyle;
+    } else {
+      return styles.disabledDay;
+    }
+  };
+
+  const getTextStyle = () => {
+    if (hasEntry || isToday) {
+      return styles.dayText;
+    } else {
+      return styles.disabledDayText;
+    }
+  };
+
   return (
     <TouchableOpacity
       style={styles.dayCell}
-      disabled={!hasEntry || isFuture}
-      activeOpacity={hasEntry && !isFuture ? 0.2 : 1}
+      disabled={isFuture}
+      activeOpacity={!isFuture ? 0.6 : 1}
       onPress={onPress}
     >
-      <View
-        style={[
-          styles.day,
-          hasEntry && styles.hasEntry,
-          !hasEntry && styles.disabledDay,
-          isFuture && styles.disabledDay,
-        ]}
-      >
-        <Text
-          style={[
-            styles.dayText,
-            (isFuture || !hasEntry) && styles.disabledDayText,
-          ]}
-        >
-          {day}
-        </Text>
-        {hasEntry && !isFuture && <Text style={styles.checkmark}>✔</Text>}
+      <View style={[styles.day, getDayStyle()]}>
+        <Text style={getTextStyle()}>{day}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -62,21 +66,20 @@ const styles = StyleSheet.create({
   },
   dayText: {
     fontSize: 16,
+    color: "#fff",
   },
   hasEntry: {
-    backgroundColor: "#34c759",
+    backgroundColor: "#2ecc71",
   },
-  checkmark: {
-    fontSize: 20,
-    color: "white",
-    position: "absolute",
-    bottom: 2,
+  todayStyle: {
+    backgroundColor: "#f1c40f",
   },
   disabledDay: {
-    backgroundColor: "#eee",
+    backgroundColor: "#222",
   },
   disabledDayText: {
-    color: "#aaa",
+    fontSize: 16,
+    color: "#666",
   },
 });
 

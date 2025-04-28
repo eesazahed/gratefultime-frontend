@@ -19,7 +19,7 @@ type Errors = {
 
 const Signup = () => {
   const router = useRouter();
-  const { login } = useAuth(); // grab login from AuthContext
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

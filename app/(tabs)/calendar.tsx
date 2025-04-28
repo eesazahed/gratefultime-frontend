@@ -1,18 +1,18 @@
 import React, { useCallback, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import CalendarGrid from "../../components/CalendarGrid";
-import { useAuth } from "../../context/AuthContext"; // adjust the path if needed
+import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect } from "expo-router";
 
 const Calendar = () => {
-  const { token } = useAuth(); // get the token from context
+  const { token } = useAuth();
   const [entries, setEntries] = useState<{ [key: string]: boolean }>({});
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
   useFocusEffect(
     useCallback(() => {
       const fetchEntries = async () => {
-        console.log("fetched");
+        console.log("Fetched");
         try {
           if (!token) {
             console.error("JWT token not found");
@@ -64,7 +64,8 @@ const Calendar = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
+    padding: 40,
   },
 });
 

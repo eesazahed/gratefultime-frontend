@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 
-const LandingPage = () => {
+const Home = () => {
   const { token } = useAuth();
 
   return (
@@ -17,15 +17,16 @@ const LandingPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 40,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#000",
   },
   text: {
     fontSize: 24,
     fontWeight: "600",
-    color: "#2C3E50",
+    color: "#fff",
   },
 });
 
-export default LandingPage;
+export default Home;

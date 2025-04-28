@@ -20,11 +20,10 @@ const DayGrid = ({
   handleDayPress,
 }: DayGridProps) => {
   const getFormattedDate = (day: number) => {
-    return `${currentMonth.getFullYear()}-${
-      currentMonth.getMonth() + 1 < 10
-        ? `0${currentMonth.getMonth() + 1}`
-        : currentMonth.getMonth() + 1
-    }-${day < 10 ? `0${day}` : day}`;
+    const year = currentMonth.getFullYear();
+    const month = String(currentMonth.getMonth() + 1).padStart(2, "0");
+    const dayStr = String(day).padStart(2, "0");
+    return `${year}-${month}-${dayStr}`;
   };
 
   const totalDays = days.length;
@@ -37,10 +36,15 @@ const DayGrid = ({
       cells.push(<View key={`empty-${i}`} style={styles.emptyDayCell} />);
     }
 
-    days.forEach((day, i) => {
+    days.forEach((day) => {
       const formattedDate = getFormattedDate(day);
       const hasEntry = entries[formattedDate];
       const isFuture = new Date(formattedDate) > today;
+
+      const isToday =
+        today.getFullYear() === currentMonth.getFullYear() &&
+        today.getMonth() === currentMonth.getMonth() &&
+        today.getDate() === day;
 
       cells.push(
         <DayCell
@@ -49,6 +53,7 @@ const DayGrid = ({
           formattedDate={formattedDate}
           hasEntry={hasEntry}
           isFuture={isFuture}
+          isToday={isToday}
           onPress={() => handleDayPress(day)}
         />
       );

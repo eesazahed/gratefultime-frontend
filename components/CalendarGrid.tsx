@@ -107,7 +107,7 @@ const CalendarGrid = ({
   };
 
   return (
-    <View style={styles.calendarContainer}>
+    <View>
       <Text style={styles.monthTitle}>
         {currentMonth.toLocaleString("default", { month: "long" })}{" "}
         {currentMonth.getFullYear()}
@@ -122,7 +122,6 @@ const CalendarGrid = ({
         handleDayPress={handleDayPress}
       />
       <MonthNavigation
-        currentMonth={currentMonth}
         handlePreviousMonth={handlePreviousMonth}
         handleNextMonth={handleNextMonth}
         isAtMinMonth={isAtMinMonth}
@@ -139,10 +138,8 @@ const CalendarGrid = ({
 };
 
 const styles = StyleSheet.create({
-  calendarContainer: {
-    margin: 20,
-  },
   monthTitle: {
+    color: "#fff",
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",

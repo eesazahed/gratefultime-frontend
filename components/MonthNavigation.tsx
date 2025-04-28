@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 type MonthNavigationProps = {
-  currentMonth: Date;
   handlePreviousMonth: () => void;
   handleNextMonth: () => void;
   isAtMinMonth: boolean;
@@ -10,7 +9,6 @@ type MonthNavigationProps = {
 };
 
 const MonthNavigation = ({
-  currentMonth,
   handlePreviousMonth,
   handleNextMonth,
   isAtMinMonth,
@@ -50,23 +48,24 @@ const styles = StyleSheet.create({
   navButton: {
     flex: 1,
     paddingVertical: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#1c1c1c",
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#333",
     borderRadius: 10,
     marginHorizontal: 5,
     alignItems: "center",
   },
   navText: {
     fontSize: 16,
-    color: "#333",
+    color: "#f0f0f0",
+    fontWeight: "500",
   },
   disabledButton: {
-    backgroundColor: "#f0f0f0",
-    borderColor: "#ddd",
+    backgroundColor: "#2a2a2a",
+    borderColor: "#444",
   },
   disabledText: {
-    color: "#aaa",
+    color: "#777",
   },
 });
 

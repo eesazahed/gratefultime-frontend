@@ -27,12 +27,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 4,
   },
-
   weekDay: {
     width: "100%",
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: "500",
     textAlign: "center",
+    color: "#fff",
   },
 });
 

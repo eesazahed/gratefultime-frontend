@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   StyleSheet,
   View,
   TextInput,
-  Button,
   Text,
   ScrollView,
   TouchableOpacity,
@@ -50,7 +49,7 @@ export default function Grateful() {
     "Describe a challenge today that turned out better than expected.",
   ];
 
-  const mockNotificationHour = 20;
+  const mockNotificationHour = 1;
 
   useFocusEffect(
     useCallback(() => {
@@ -71,7 +70,10 @@ export default function Grateful() {
 
   const checkResetTime = async () => {
     const resetTimeStr = await AsyncStorage.getItem("RESET_TIME");
-    if (!resetTimeStr) return;
+    if (!resetTimeStr) {
+      setHasSubmittedToday(false);
+      return;
+    }
 
     const resetTime = new Date(resetTimeStr);
     const now = new Date();
@@ -192,32 +194,35 @@ export default function Grateful() {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>What are you grateful for today?</Text>
 
-      {entries.map((entry, i) => {
-        const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
-        return (
-          <View key={i}>
-            <TextInput
-              style={[styles.input, errors[errorKey] && styles.errorInput]}
-              value={entry}
-              placeholder={`Gratitude #${i + 1}`}
-              onChangeText={(text) => {
-                const updated = [...entries];
-                updated[i] = text;
-                setEntries(updated);
-              }}
-            />
-            {errors[errorKey] && (
-              <Text style={styles.errorText}>{errors[errorKey]}</Text>
-            )}
-          </View>
-        );
-      })}
+      <View style={styles.entriesWrapper}>
+        {entries.map((entry, i) => {
+          const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
+          return (
+            <View key={i}>
+              <TextInput
+                style={[styles.input, errors[errorKey] && styles.errorInput]}
+                value={entry}
+                placeholder={`Gratitude #${i + 1}`}
+                placeholderTextColor="#bbb"
+                onChangeText={(text) => {
+                  const updated = [...entries];
+                  updated[i] = text;
+                  setEntries(updated);
+                }}
+              />
+              {errors[errorKey] && (
+                <Text style={styles.errorText}>{errors[errorKey]}</Text>
+              )}
+            </View>
+          );
+        })}
+      </View>
 
-      <Text style={styles.promptLabel}>Reflection Prompt:</Text>
       <Text style={styles.prompt}>{aiPrompt}</Text>
       <TextInput
         style={[styles.textArea, errors.promptResponse && styles.errorInput]}
         placeholder="Write a short reflection..."
+        placeholderTextColor="#bbb"
         value={promptResponse}
         onChangeText={setPromptResponse}
         multiline
@@ -225,25 +230,38 @@ export default function Grateful() {
       {errors.promptResponse ? (
         <Text style={styles.errorText}>{errors.promptResponse}</Text>
       ) : null}
-
-      {errors.submission ? (
-        <Text style={styles.errorText}>{errors.submission}</Text>
-      ) : null}
+      <TouchableOpacity style={styles.button} onPress={generatePrompt}>
+        <Text style={styles.buttonText}>Regenerate Prompt</Text>
+      </TouchableOpacity>
 
       <View style={styles.buttonGroup}>
-        <Button title="Regenerate Prompt" onPress={generatePrompt} />
-        <Button title="Save Entry" onPress={saveEntries} />
+        {errors.submission ? (
+          <Text
+            style={{
+              ...styles.errorText,
+              textAlign: "center",
+              paddingBottom: 12,
+            }}
+          >
+            {errors.submission}
+          </Text>
+        ) : null}
+        <TouchableOpacity
+          style={[styles.button, styles.saveButton]}
+          onPress={saveEntries}
+        >
+          <Text style={styles.buttonText}>Save Entry</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    margin: 40,
     flexGrow: 1,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#000",
   },
   centered: {
     flex: 1,
@@ -265,48 +283,65 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     marginBottom: 20,
-    fontFamily: "sans-serif",
+    color: "#fff",
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#1f1f1f",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 12,
     marginBottom: 12,
-    fontFamily: "sans-serif",
+    backgroundColor: "#2c2c2c",
+    color: "#fff",
   },
   errorInput: {
     borderColor: "red",
   },
-  promptLabel: {
-    marginTop: 10,
-    fontWeight: "bold",
-    marginBottom: 4,
-    fontSize: 16,
-    fontFamily: "sans-serif",
-  },
   prompt: {
     fontStyle: "italic",
     marginBottom: 8,
-    color: "#333",
-    fontFamily: "sans-serif",
+    color: "#bbb",
   },
   textArea: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
+    borderColor: "#1f1f1f",
+    borderRadius: 12,
     padding: 12,
     minHeight: 80,
     textAlignVertical: "top",
     marginBottom: 12,
-    fontFamily: "sans-serif",
+    backgroundColor: "#2c2c2c",
+    color: "#fff",
+  },
+  entriesWrapper: {
+    marginBottom: 20,
   },
   buttonGroup: {
-    gap: 10,
+    marginTop: 50,
+  },
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    backgroundColor: "#525252",
+    borderWidth: 1,
+    borderColor: "#2c2c2c",
+    opacity: 0.9,
+  },
+  saveButton: {
+    backgroundColor: "#81c784",
+    borderColor: "#81c784",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "400",
   },
   errorText: {
     color: "red",
-    fontSize: 14,
+    fontSize: 10,
+    marginLeft: 8,
     marginBottom: 12,
   },
 });
