@@ -195,8 +195,7 @@ export default function Grateful() {
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
         <Header title="What are you grateful for?" />
-
-        <Container style={styles.entriesWrapper}>
+        <Container>
           {entries.map((entry, i) => {
             const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
             return (
@@ -214,27 +213,22 @@ export default function Grateful() {
               />
             );
           })}
-        </Container>
-        <Container style={styles.entriesWrapper}>
 
-        <ThemedText style={styles.prompt}>{aiPrompt}</ThemedText>
-        <TextArea
-          maxLength={100}
-          placeholder="Write a short reflection..."
-          value={promptResponse}
-          onChangeText={setPromptResponse}
-          error={errors.promptResponse}
-        />
+          <ThemedText style={styles.prompt}>{aiPrompt}</ThemedText>
+          <TextArea
+            maxLength={100}
+            placeholder="Write a short reflection..."
+            value={promptResponse}
+            onChangeText={setPromptResponse}
+            error={errors.promptResponse}
+          />
+          <Button
+            title="Regenerate Prompt"
+            onPress={generatePrompt}
+            variant="outline"
+            style={styles.regenButton}
+          />
 
-        <Button
-          title="Regenerate Prompt"
-          onPress={generatePrompt}
-          variant="outline"
-          style={styles.button}
-        />
-        </Container>
-
-        <Container style={styles.buttonGroup}>
           {errors.submission ? (
             <ThemedText
               style={{
@@ -246,8 +240,9 @@ export default function Grateful() {
               {errors.submission}
             </ThemedText>
           ) : null}
+
           <Button
-            title="Save Entries"
+            title="Save Entry"
             onPress={saveEntries}
             style={styles.saveButton}
           />
@@ -272,9 +267,6 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     textAlign: "center",
   },
-  entriesWrapper: {
-    marginBottom: 24,
-  },
   prompt: {
     fontSize: 16,
     fontWeight: "500",
@@ -284,18 +276,17 @@ const styles = StyleSheet.create({
     color: "#8f8f8f",
     fontStyle: "italic",
   },
-  button: {
-    marginBottom: 16,
-  },
-  buttonGroup: {
-    marginTop: 24,
+  regenButton: {
+    marginBottom: 52,
   },
   saveButton: {
-    marginTop: 8,
+    backgroundColor: "#32a852",
+    marginBottom: 32,
   },
   errorText: {
     color: "red",
-    fontSize: 12,
+    fontSize: 14,
+    marginVertical: 8,
   },
   lockedText: {
     fontSize: 18,

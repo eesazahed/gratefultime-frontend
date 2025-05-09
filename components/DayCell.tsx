@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   hasEntry: {
-    backgroundColor: "#2ecc71",
+    backgroundColor: "#32a852",
   },
   todayStyle: {
     backgroundColor: "#f1c40f",
