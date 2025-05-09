@@ -19,7 +19,9 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: { position: "absolute" },
-          default: {},
+          default: {
+            height: 80,
+          },
         }),
       }}
     >
@@ -28,6 +30,9 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => <IconSymbol name="home" color={color} />,
+          tabBarItemStyle: {
+            marginVertical: "auto",
+          },
         }}
       />
       <Tabs.Screen
@@ -38,6 +43,9 @@ export default function TabLayout() {
             <IconSymbol name="person-add" color={color} />
           ),
           href: !token ? "/(tabs)/signup" : null,
+          tabBarItemStyle: {
+            marginVertical: "auto",
+          },
         }}
       />
       <Tabs.Screen
@@ -46,6 +54,9 @@ export default function TabLayout() {
           title: "Login",
           tabBarIcon: ({ color }) => <IconSymbol name="login" color={color} />,
           href: !token ? "/(tabs)/login" : null,
+          tabBarItemStyle: {
+            marginVertical: "auto",
+          },
         }}
       />
       <Tabs.Screen
@@ -54,6 +65,9 @@ export default function TabLayout() {
           title: "Grateful",
           tabBarIcon: ({ color }) => <IconSymbol name="create" color={color} />,
           href: token ? "/(tabs)/grateful" : null,
+          tabBarItemStyle: {
+            marginVertical: "auto",
+          },
         }}
       />
       <Tabs.Screen
@@ -64,6 +78,9 @@ export default function TabLayout() {
             <IconSymbol name="calendar-month" color={color} />
           ),
           href: token ? "/(tabs)/calendar" : null,
+          tabBarItemStyle: {
+            marginVertical: "auto",
+          },
         }}
       />
       <Tabs.Screen
@@ -72,6 +89,9 @@ export default function TabLayout() {
           title: "Profile",
           tabBarIcon: ({ color }) => <IconSymbol name="person" color={color} />,
           href: token ? "/(tabs)/profile" : null,
+          tabBarItemStyle: {
+            marginVertical: "auto",
+          },
         }}
       />
       <Tabs.Screen
@@ -82,6 +102,9 @@ export default function TabLayout() {
             <IconSymbol name="settings" color={color} />
           ),
           href: token ? "/(tabs)/settings" : null,
+          tabBarItemStyle: {
+            marginVertical: "auto",
+          },
         }}
       />
     </Tabs>

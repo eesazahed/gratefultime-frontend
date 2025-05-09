@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
+import { Container } from "../../components/ui/Container";
+import { Input } from "../../components/ui/Input";
+import { Button } from "../../components/ui/Button";
+import { ThemedText } from "../../components/ThemedText";
+import { Header } from "../../components/ui/Header";
 
 type Errors = {
   email: string;
@@ -82,58 +80,44 @@ const Signup = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Sign Up</Text>
+    <Container style={styles.container}>
+      <Header title="Sign Up" />
 
-      <TextInput
-        style={[styles.input, errors.email && styles.errorInput]}
+      <Input
         placeholder="Email"
         autoCapitalize="none"
         onChangeText={setEmail}
         value={email}
+        error={errors.email}
       />
-      {errors.email ? (
-        <Text style={styles.errorText}>{errors.email}</Text>
-      ) : null}
 
-      <TextInput
-        style={[styles.input, errors.username && styles.errorInput]}
+      <Input
         placeholder="Username"
         autoCapitalize="none"
         onChangeText={setUsername}
         value={username}
+        error={errors.username}
       />
-      {errors.username ? (
-        <Text style={styles.errorText}>{errors.username}</Text>
-      ) : null}
 
-      <TextInput
-        style={[styles.input, errors.password && styles.errorInput]}
+      <Input
         placeholder="Password"
         secureTextEntry
         onChangeText={setPassword}
         value={password}
+        error={errors.password}
       />
-      {errors.password ? (
-        <Text style={styles.errorText}>{errors.password}</Text>
-      ) : null}
 
-      {errors.submission ? (
-        <Text style={styles.errorText}>{errors.submission}</Text>
-      ) : null}
+      {errors.submission && (
+        <ThemedText style={styles.errorText}>{errors.submission}</ThemedText>
+      )}
 
-      <TouchableOpacity
-        style={styles.button}
+      <Button
+        title="Sign Up"
         onPress={handleSignup}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Sign Up</Text>
-        )}
-      </TouchableOpacity>
-    </View>
+        loading={loading}
+        style={styles.button}
+      />
+    </Container>
   );
 };
 
@@ -141,45 +125,16 @@ export default Signup;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 24,
     justifyContent: "center",
-    backgroundColor: "#F9FAFB",
-  },
-  header: {
-    fontSize: 28,
-    fontWeight: "700",
-    marginBottom: 32,
-    color: "#2C3E50",
-    textAlign: "center",
-  },
-  input: {
-    backgroundColor: "#FFFFFF",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 8,
-    fontSize: 16,
-    borderColor: "#DDD",
-    borderWidth: 1,
-  },
-  errorInput: {
-    borderColor: "red",
   },
   errorText: {
     color: "red",
     marginBottom: 10,
-    fontSize: 14,
+    fontSize: 12,
+    marginLeft: 8,
   },
   button: {
-    backgroundColor: "#2980B9",
-    padding: 16,
-    borderRadius: 12,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 16,
-    fontWeight: "600",
+    marginTop: 20,
   },
 });
+

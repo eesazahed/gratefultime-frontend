@@ -140,10 +140,11 @@ const CalendarGrid = ({
 const styles = StyleSheet.create({
   monthTitle: {
     color: "#fff",
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 28,
+    fontWeight: 600,
     textAlign: "center",
-    marginVertical: 20,
+    marginTop: 40,
+    marginBottom: 40
   },
 });
 

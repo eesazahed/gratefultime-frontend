@@ -1,16 +1,13 @@
 import React, { useCallback, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { FlatList, StyleSheet, ActivityIndicator, ScrollView, Pressable } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
+import { Container } from "../../components/ui/Container";
+import { Button } from "../../components/ui/Button";
+import { ThemedText } from "../../components/ThemedText";
+import { IconSymbol } from "../../components/ui/IconSymbol";
+import { Header } from "../../components/ui/Header";
 
 type Entry = {
   id: number;
@@ -101,60 +98,62 @@ const Profile = () => {
       entryDate.getFullYear() === today.getFullYear();
 
     return (
-      <View style={styles.entryCard}>
+      <Container style={styles.entryCard}>
         {isToday && (
-          <TouchableOpacity
+          <Pressable
             style={styles.deleteButton}
             onPress={() => deleteEntry(item.id)}
           >
-            <Text style={styles.closeButtonText}>&times;</Text>
-          </TouchableOpacity>
+        <ThemedText style={styles.deleteButton}>&times;</ThemedText>
+        </Pressable>
         )}
 
-        <Text style={styles.dateText}>{formattedDate}</Text>
-        <Text style={styles.sectionTitle}>Grateful for:</Text>
-        <Text style={styles.entryText}>1. {item.entry1}</Text>
-        <Text style={styles.entryText}>2. {item.entry2}</Text>
-        <Text style={styles.entryText}>3. {item.entry3}</Text>
-        <Text style={styles.prompt}>"{item.user_prompt}"</Text>
-        <Text style={styles.response}>"{item.user_prompt_response}"</Text>
-      </View>
+        <ThemedText style={styles.dateText}>{formattedDate}</ThemedText>
+        <ThemedText style={styles.sectionTitle}>Grateful for:</ThemedText>
+        <ThemedText style={styles.entryText}>1. {item.entry1}</ThemedText>
+        <ThemedText style={styles.entryText}>2. {item.entry2}</ThemedText>
+        <ThemedText style={styles.entryText}>3. {item.entry3}</ThemedText>
+        <ThemedText style={styles.prompt}>"{item.user_prompt}"</ThemedText>
+        <ThemedText style={styles.response}>"{item.user_prompt_response}"</ThemedText>
+      </Container>
     );
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
+    return (
+      <Container style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
+      </Container>
+    );
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Your Past Entries</Text>
-      {entries.length === 0 ? (
-        <Text style={styles.noData}>You haven't written anything yet.</Text>
-      ) : (
-        <FlatList
-          data={entries}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderEntry}
-          scrollEnabled={false}
-        />
-      )}
+      <Container>
+        <Header title="Your Past Entries" />
+        {entries.length === 0 ? (
+          <ThemedText style={styles.noData}>You haven't written anything yet.</ThemedText>
+        ) : (
+          <FlatList
+            data={entries}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderEntry}
+            scrollEnabled={false}
+          />
+        )}
+      </Container>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 40,
-    backgroundColor: "#000",
     flexGrow: 1,
   },
-  header: {
-    fontSize: 28,
-    fontWeight: "600",
-    marginBottom: 40,
-    color: "#f5f5f5",
-    textAlign: "center",
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   noData: {
     fontSize: 16,
@@ -162,15 +161,17 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   entryCard: {
-    backgroundColor: "#2a2a2a",
-    borderRadius: 16,
+    backgroundColor: "#121212",
+    width: "85%",
+    marginHorizontal: "auto",
+    borderRadius: 20,
     padding: 20,
     marginBottom: 30,
-    elevation: 2,
+    elevation: 10,
     shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
   },
   dateText: {
     fontSize: 16,
@@ -181,23 +182,19 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#e0e0e0",
     marginBottom: 6,
   },
   entryText: {
     fontSize: 15,
-    color: "#cccccc",
     marginBottom: 4,
   },
   prompt: {
     fontSize: 15,
     fontStyle: "italic",
-    color: "#999999",
     marginTop: 10,
   },
   response: {
     fontSize: 16,
-    color: "#dddddd",
     marginTop: 6,
   },
   deleteButton: {
@@ -207,10 +204,7 @@ const styles = StyleSheet.create({
     padding: 6,
     borderRadius: 12,
     zIndex: 1,
-  },
-  closeButtonText: {
-    fontSize: 20,
-    color: "#f5f5f5",
+    fontSize: 36,
   },
 });
 

@@ -1,15 +1,14 @@
 import { useCallback, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect } from "expo-router";
+import { Container } from "../../components/ui/Container";
+import { Input } from "../../components/ui/Input";
+import { TextArea } from "../../components/ui/TextArea";
+import { Button } from "../../components/ui/Button";
+import { ThemedText } from "../../components/ThemedText";
+import { Header } from "../../components/ui/Header";
 
 type EntryKey =
   | "entry1"
@@ -49,7 +48,7 @@ export default function Grateful() {
     "Describe a challenge today that turned out better than expected.",
   ];
 
-  const mockNotificationHour = 1;
+  const mockNotificationHour = 20; // manually set
 
   useFocusEffect(
     useCallback(() => {
@@ -175,173 +174,132 @@ export default function Grateful() {
 
   if (isLocked || hasSubmittedToday) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.lockedText}>
+      <Container style={styles.centered}>
+        <ThemedText style={styles.lockedText}>
           {hasSubmittedToday
             ? "You've already journaled today. Come back tomorrow!"
             : "Your gratitude journal unlocks at 8:00 PM."}
-        </Text>
+        </ThemedText>
         {!hasSubmittedToday && (
-          <TouchableOpacity onPress={() => setIsLocked(false)}>
-            <Text style={styles.unlockEarlyText}>Unlock early</Text>
-          </TouchableOpacity>
+          <Button
+            title="Unlock early"
+            onPress={() => setIsLocked(false)}
+            variant="outline"
+          />
         )}
-      </View>
+      </Container>
     );
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>What are you grateful for today?</Text>
+      <Container>
+        <Header title="What are you grateful for?" />
 
-      <View style={styles.entriesWrapper}>
-        {entries.map((entry, i) => {
-          const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
-          return (
-            <View key={i}>
-              <TextInput
-                style={[styles.input, errors[errorKey] && styles.errorInput]}
+        <Container style={styles.entriesWrapper}>
+          {entries.map((entry, i) => {
+            const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
+            return (
+              <Input
+                maxLength={50}
+                key={i}
                 value={entry}
                 placeholder={`Gratitude #${i + 1}`}
-                placeholderTextColor="#bbb"
                 onChangeText={(text) => {
                   const updated = [...entries];
                   updated[i] = text;
                   setEntries(updated);
                 }}
+                error={errors[errorKey]}
               />
-              {errors[errorKey] && (
-                <Text style={styles.errorText}>{errors[errorKey]}</Text>
-              )}
-            </View>
-          );
-        })}
-      </View>
+            );
+          })}
+        </Container>
+        <Container style={styles.entriesWrapper}>
 
-      <Text style={styles.prompt}>{aiPrompt}</Text>
-      <TextInput
-        style={[styles.textArea, errors.promptResponse && styles.errorInput]}
-        placeholder="Write a short reflection..."
-        placeholderTextColor="#bbb"
-        value={promptResponse}
-        onChangeText={setPromptResponse}
-        multiline
-      />
-      {errors.promptResponse ? (
-        <Text style={styles.errorText}>{errors.promptResponse}</Text>
-      ) : null}
-      <TouchableOpacity style={styles.button} onPress={generatePrompt}>
-        <Text style={styles.buttonText}>Regenerate Prompt</Text>
-      </TouchableOpacity>
+        <ThemedText style={styles.prompt}>{aiPrompt}</ThemedText>
+        <TextArea
+          maxLength={100}
+          placeholder="Write a short reflection..."
+          value={promptResponse}
+          onChangeText={setPromptResponse}
+          error={errors.promptResponse}
+        />
 
-      <View style={styles.buttonGroup}>
-        {errors.submission ? (
-          <Text
-            style={{
-              ...styles.errorText,
-              textAlign: "center",
-              paddingBottom: 12,
-            }}
-          >
-            {errors.submission}
-          </Text>
-        ) : null}
-        <TouchableOpacity
-          style={[styles.button, styles.saveButton]}
-          onPress={saveEntries}
-        >
-          <Text style={styles.buttonText}>Save Entry</Text>
-        </TouchableOpacity>
-      </View>
+        <Button
+          title="Regenerate Prompt"
+          onPress={generatePrompt}
+          variant="outline"
+          style={styles.button}
+        />
+        </Container>
+
+        <Container style={styles.buttonGroup}>
+          {errors.submission ? (
+            <ThemedText
+              style={{
+                ...styles.errorText,
+                textAlign: "center",
+                paddingBottom: 12,
+              }}
+            >
+              {errors.submission}
+            </ThemedText>
+          ) : null}
+          <Button
+            title="Save Entries"
+            onPress={saveEntries}
+            style={styles.saveButton}
+          />
+        </Container>
+      </Container>
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
-    margin: 40,
     flexGrow: 1,
-    justifyContent: "center",
-    backgroundColor: "#000",
   },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 24,
-  },
-  lockedText: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "#888",
-    marginBottom: 12,
-  },
-  unlockEarlyText: {
-    fontSize: 10,
-    color: "#3498db",
-    marginTop: 48,
   },
   title: {
-    fontSize: 22,
-    marginBottom: 20,
-    color: "#fff",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#1f1f1f",
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 12,
-    backgroundColor: "#2c2c2c",
-    color: "#fff",
-  },
-  errorInput: {
-    borderColor: "red",
-  },
-  prompt: {
-    fontStyle: "italic",
-    marginBottom: 8,
-    color: "#bbb",
-  },
-  textArea: {
-    borderWidth: 1,
-    borderColor: "#1f1f1f",
-    borderRadius: 12,
-    padding: 12,
-    minHeight: 80,
-    textAlignVertical: "top",
-    marginBottom: 12,
-    backgroundColor: "#2c2c2c",
-    color: "#fff",
+    fontSize: 24,
+    fontWeight: "600",
+    marginVertical: 24,
+    textAlign: "center",
   },
   entriesWrapper: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
-  buttonGroup: {
-    marginTop: 50,
+  prompt: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginTop: 16,
+    marginBottom: 16,
+    paddingLeft: 4,
+    color: "#8f8f8f",
+    fontStyle: "italic",
   },
   button: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    alignItems: "center",
-    backgroundColor: "#525252",
-    borderWidth: 1,
-    borderColor: "#2c2c2c",
-    opacity: 0.9,
+    marginBottom: 16,
+  },
+  buttonGroup: {
+    marginTop: 24,
   },
   saveButton: {
-    backgroundColor: "#81c784",
-    borderColor: "#81c784",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "400",
+    marginTop: 8,
   },
   errorText: {
     color: "red",
-    fontSize: 10,
-    marginLeft: 8,
-    marginBottom: 12,
+    fontSize: 12,
+  },
+  lockedText: {
+    fontSize: 18,
+    textAlign: "center",
+    marginBottom: 64,
   },
 });

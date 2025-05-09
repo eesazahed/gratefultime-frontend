@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import CalendarGrid from "../../components/CalendarGrid";
 import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect } from "expo-router";
+import { Container } from "../../components/ui/Container";
 
 const Calendar = () => {
   const { token } = useAuth();
@@ -51,21 +52,19 @@ const Calendar = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <Container style={styles.container}>
       <CalendarGrid
         entries={entries}
         currentMonth={currentMonth}
         setCurrentMonth={setCurrentMonth}
       />
-    </View>
+    </Container>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
-    padding: 40,
   },
 });
 
