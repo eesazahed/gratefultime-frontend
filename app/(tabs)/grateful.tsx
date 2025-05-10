@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../context/AuthContext";
@@ -33,6 +33,7 @@ export default function Grateful() {
   const [promptResponse, setPromptResponse] = useState("");
   const [isLocked, setIsLocked] = useState(true);
   const [hasSubmittedToday, setHasSubmittedToday] = useState(false);
+  const [notificationHour, setNotificationHour] = useState<number>(20); // Default to 20
 
   const [errors, setErrors] = useState<Errors>({
     entry1: "",
@@ -48,20 +49,30 @@ export default function Grateful() {
     "Describe a challenge today that turned out better than expected.",
   ];
 
-  const mockNotificationHour = 20; // manually set
-
   useFocusEffect(
     useCallback(() => {
+      fetchNotificationHour();
       checkIfUnlocked();
       generatePrompt();
       checkResetTime();
-    }, [token])
+    }, [token, notificationHour])
   );
+
+  const fetchNotificationHour = async () => {
+    const storedHour = await AsyncStorage.getItem("NOTIFICATION_HOUR");
+    if (storedHour) {
+      setNotificationHour(Number(storedHour));
+    } else {
+      // Default to 20 if not set
+      await AsyncStorage.setItem("NOTIFICATION_HOUR", "20");
+      setNotificationHour(20);
+    }
+  };
 
   const checkIfUnlocked = () => {
     const now = new Date();
     const unlockTime = new Date();
-    unlockTime.setHours(mockNotificationHour, 0, 0);
+    unlockTime.setHours(notificationHour, 0, 0); // Use the stored notification hour
     const midnight = new Date();
     midnight.setHours(23, 59, 59);
     setIsLocked(!(now >= unlockTime && now <= midnight));
@@ -172,13 +183,24 @@ export default function Grateful() {
     }
   };
 
+  const formattedUnlockTime = new Date();
+  formattedUnlockTime.setHours(notificationHour, 0, 0);
+
+  const formattedUnlockTimeString = formattedUnlockTime.toLocaleString(
+    "en-US",
+    {
+      hour: "numeric",
+      minute: "2-digit",
+    }
+  );
+
   if (isLocked || hasSubmittedToday) {
     return (
       <Container style={styles.centered}>
         <ThemedText style={styles.lockedText}>
           {hasSubmittedToday
             ? "You've already journaled today. Come back tomorrow!"
-            : "Your gratitude journal unlocks at 8:00 PM."}
+            : `Your gratitude journal unlocks at ${formattedUnlockTimeString}`}
         </ThemedText>
         {!hasSubmittedToday && (
           <Button
@@ -195,58 +217,57 @@ export default function Grateful() {
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
         <Header title="What are you grateful for?" />
-        <Container>
-          {entries.map((entry, i) => {
-            const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
-            return (
-              <Input
-                maxLength={50}
-                key={i}
-                value={entry}
-                placeholder={`Gratitude #${i + 1}`}
-                onChangeText={(text) => {
-                  const updated = [...entries];
-                  updated[i] = text;
-                  setEntries(updated);
-                }}
-                error={errors[errorKey]}
-              />
-            );
-          })}
 
-          <ThemedText style={styles.prompt}>{aiPrompt}</ThemedText>
-          <TextArea
-            maxLength={100}
-            placeholder="Write a short reflection..."
-            value={promptResponse}
-            onChangeText={setPromptResponse}
-            error={errors.promptResponse}
-          />
-          <Button
-            title="Regenerate Prompt"
-            onPress={generatePrompt}
-            variant="outline"
-            style={styles.regenButton}
-          />
-
-          {errors.submission ? (
-            <ThemedText
-              style={{
-                ...styles.errorText,
-                textAlign: "center",
-                paddingBottom: 12,
+        {entries.map((entry, i) => {
+          const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
+          return (
+            <Input
+              maxLength={50}
+              key={i}
+              value={entry}
+              placeholder={`Gratitude #${i + 1}`}
+              onChangeText={(text) => {
+                const updated = [...entries];
+                updated[i] = text;
+                setEntries(updated);
               }}
-            >
-              {errors.submission}
-            </ThemedText>
-          ) : null}
+              error={errors[errorKey]}
+            />
+          );
+        })}
 
-          <Button
-            title="Save Entry"
-            onPress={saveEntries}
-            style={styles.saveButton}
-          />
-        </Container>
+        <ThemedText style={styles.prompt}>{aiPrompt}</ThemedText>
+        <TextArea
+          maxLength={100}
+          placeholder="Write a short reflection..."
+          value={promptResponse}
+          onChangeText={setPromptResponse}
+          error={errors.promptResponse}
+        />
+        <Button
+          title="Regenerate Prompt"
+          onPress={generatePrompt}
+          variant="outline"
+          style={styles.regenButton}
+        />
+
+        {errors.submission ? (
+          <ThemedText
+            style={{
+              ...styles.errorText,
+              textAlign: "center",
+              paddingBottom: 12,
+            }}
+          >
+            {errors.submission}
+          </ThemedText>
+        ) : null}
+
+        <Button
+          title="Save Entry"
+          onPress={saveEntries}
+          style={styles.saveButton}
+        />
       </Container>
     </ScrollView>
   );
