@@ -51,7 +51,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    marginTop: 20,
+    backgroundColor: "#323232",
+    marginVertical: 20,
   },
   errorText: {
     color: "red",

@@ -1,15 +1,11 @@
-import { StyleProp, ViewStyle } from 'react-native';
-import { Input, InputProps } from './Input';
+import { StyleProp, ViewStyle } from "react-native";
+import { Input, InputProps } from "./Input";
 
-interface TextAreaProps extends Omit<InputProps, 'multiline'> {
+interface TextAreaProps extends Omit<InputProps, "multiline"> {
   minHeight?: number;
 }
 
-export function TextArea({
-  minHeight = 100,
-  style,
-  ...props
-}: TextAreaProps) {
+export function TextArea({ minHeight = 100, style, ...props }: TextAreaProps) {
   return (
     <Input
       multiline
@@ -24,4 +20,4 @@ export function TextArea({
       {...props}
     />
   );
-} 
+}

@@ -1,6 +1,12 @@
-import { StyleProp, TextInput, TextInputProps, View, ViewStyle } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { ThemedText } from '../ThemedText';
+import {
+  StyleProp,
+  TextInput,
+  TextInputProps,
+  View,
+  ViewStyle,
+} from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { ThemedText } from "../ThemedText";
 
 export interface InputProps extends TextInputProps {
   label?: string;
@@ -24,7 +30,7 @@ export function Input({
           style={{
             marginBottom: 8,
             fontSize: 16,
-            fontWeight: '500',
+            fontWeight: "500",
           }}
         >
           {label}
@@ -43,7 +49,7 @@ export function Input({
           },
           style,
         ]}
-        placeholderTextColor={colors.text + '80'}
+        placeholderTextColor={colors.text + "80"}
         {...props}
       />
       {error && (
@@ -59,4 +65,4 @@ export function Input({
       )}
     </View>
   );
-} 
+}

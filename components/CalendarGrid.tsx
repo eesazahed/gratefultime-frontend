@@ -19,7 +19,7 @@ const CalendarGrid = ({
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [entryDetails, setEntryDetails] = useState<any>(null);
 
-  const minDate = new Date(2025, 1, 1);
+  const minDate = new Date(2025, 4, 1); // manually set start date: 2025, april, 1
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const maxMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     fontWeight: 600,
     textAlign: "center",
     marginTop: 40,
-    marginBottom: 40
+    marginBottom: 40,
   },
 });
 

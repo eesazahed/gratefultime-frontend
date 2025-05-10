@@ -1,16 +1,12 @@
-import { StyleProp, View, ViewStyle } from 'react-native';;
-import { ThemedText } from '../ThemedText';
+import { StyleProp, View, ViewStyle } from "react-native";
+import { ThemedText } from "../ThemedText";
 
 interface HeaderProps {
   title: string;
   style?: StyleProp<ViewStyle>;
 }
 
-export function Header({
-  title,
-  style,
-}: HeaderProps) {
-
+export function Header({ title, style }: HeaderProps) {
   return (
     <View
       style={[
@@ -18,12 +14,11 @@ export function Header({
           alignSelf: "center",
           padding: 24,
           marginTop: 24,
-          marginBottom: 18
+          marginBottom: 18,
         },
         style,
       ]}
     >
-   
       <ThemedText
         style={{
           fontSize: 28,
@@ -35,4 +30,4 @@ export function Header({
       </ThemedText>
     </View>
   );
-} 
+}

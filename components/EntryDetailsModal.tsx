@@ -106,7 +106,7 @@ const EntryDetailsModal = ({
           ) : (
             entryDetails?.map((entry: any) => (
               <View key={entry.id} style={styles.entryContainer}>
-                <Text style={styles.modalTitle}>
+                <Text style={styles.dateText}>
                   {new Date(entry.timestamp).toLocaleString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -123,7 +123,7 @@ const EntryDetailsModal = ({
                   <Text style={styles.entryText}>3. {entry.entry3}</Text>
                 </View>
 
-                <Text style={styles.promptText}>"{entry.user_prompt}"</Text>
+                <Text style={styles.gratitudeTitle}>"{entry.user_prompt}"</Text>
                 <Text style={styles.responseText}>
                   {entry.user_prompt_response}
                 </Text>
@@ -144,8 +144,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.8)",
   },
   modalContainer: {
+    marginHorizontal: 40,
     backgroundColor: "#121212",
-    width: "85%",
     borderRadius: 20,
     padding: 20,
     elevation: 10,
@@ -155,56 +155,50 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     position: "relative",
   },
-  modalTitle: {
-    fontSize: 20,
+  dateText: {
+    fontSize: 18,
     fontWeight: "600",
     marginBottom: 15,
-    color: "#ffffff",
-    textAlign: "center",
-  },
-  gratitudeTitle: {
-    fontWeight: "600",
-    color: "#a8dadc",
-    marginBottom: 10,
-    fontSize: 16,
+    color: "#3af07c",
   },
   gratitudeList: {
     marginBottom: 15,
   },
   entryText: {
-    color: "#f1f1f1",
+    color: "#fff",
     marginBottom: 8,
     fontSize: 15,
   },
-  promptText: {
+  gratitudeTitle: {
+    color: "#8f8f8f",
     fontStyle: "italic",
-    color: "#cccccc",
     marginBottom: 10,
-    fontSize: 14,
+    fontSize: 16,
   },
   responseText: {
-    color: "#e0e0e0",
+    color: "#fff",
     marginBottom: 20,
     fontSize: 15,
   },
   closeButton: {
     position: "absolute",
     top: 4,
-    right: 10,
+    right: 12,
     backgroundColor: "transparent",
     padding: 8,
     borderRadius: 12,
     zIndex: 1,
   },
   closeButtonText: {
-    fontSize: 24,
+    fontSize: 28,
     color: "#bbbbbb",
   },
   noDataText: {
     fontSize: 16,
-    color: "#888",
     textAlign: "center",
-    marginTop: 20,
+    marginVertical: 40,
+    color: "#8f8f8f",
+    fontStyle: "italic",
   },
   entryContainer: {
     marginBottom: 15,

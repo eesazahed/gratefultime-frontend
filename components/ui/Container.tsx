@@ -23,6 +23,8 @@ export function Container({
           padding,
           backgroundColor: backgroundColor ?? colors.background,
           flex: 1,
+          width: "85%",
+          marginHorizontal: "auto",
         },
         style,
       ]}
