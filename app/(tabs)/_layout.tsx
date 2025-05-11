@@ -23,6 +23,10 @@ export default function TabLayout() {
             height: 80,
           },
         }),
+        tabBarLabelPosition: "below-icon",
+        tabBarIconStyle: {
+          marginBottom: 5,
+        },
       }}
     >
       <Tabs.Screen
