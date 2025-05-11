@@ -9,7 +9,6 @@ import { TextArea } from "../../components/ui/TextArea";
 import { Button } from "../../components/ui/Button";
 import { ThemedText } from "../../components/ThemedText";
 import { Header } from "../../components/ui/Header";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type EntryKey =
   | "entry1"
@@ -50,17 +49,19 @@ export default function Grateful() {
     "Describe a challenge today that turned out better than expected.",
   ];
 
+  const DEFAULT_UNLOCK_TIME = 20; // 8pm
+
   useFocusEffect(
     useCallback(() => {
       fetchUnlockTime();
       checkIfUnlocked();
+      checkIfSubmittedToday();
       generatePrompt();
-      checkResetTime();
     }, [token, preferredUnlockTime])
   );
 
   const checkIfUnlocked = () => {
-    const hour = preferredUnlockTime ?? 20; // 8pm default
+    const hour = preferredUnlockTime ?? DEFAULT_UNLOCK_TIME;
     const now = new Date();
     const unlockTime = new Date();
     unlockTime.setHours(hour, 0, 0);
@@ -69,21 +70,39 @@ export default function Grateful() {
     setIsLocked(!(now >= unlockTime && now <= midnight));
   };
 
-  const checkResetTime = async () => {
-    const resetTimeStr = await AsyncStorage.getItem("RESET_TIME");
-    if (!resetTimeStr) {
-      setHasSubmittedToday(false);
-      return;
-    }
+  const checkIfSubmittedToday = async () => {
+    if (!token) return;
 
-    const resetTime = new Date(resetTimeStr);
-    const now = new Date();
+    try {
+      const response = await fetch(
+        "http://localhost:5000/users/recententrytimestamp",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    if (now < resetTime) {
-      setHasSubmittedToday(true);
-    } else {
+      const data = await response.json();
+
+      if (!response.ok || !data.data?.timestamp) {
+        setHasSubmittedToday(false);
+        return;
+      }
+
+      const entryDate = new Date(data.data.timestamp);
+      const now = new Date();
+
+      const isSameDay =
+        entryDate.getFullYear() === now.getFullYear() &&
+        entryDate.getMonth() === now.getMonth() &&
+        entryDate.getDate() === now.getDate();
+
+      setHasSubmittedToday(isSameDay);
+    } catch (error) {
+      console.error("Failed to fetch recent entry:", error);
       setHasSubmittedToday(false);
-      await AsyncStorage.removeItem("RESET_TIME");
     }
   };
 
@@ -150,10 +169,6 @@ export default function Grateful() {
         return;
       }
 
-      const resetTime = new Date();
-      resetTime.setDate(resetTime.getDate() + 1);
-      resetTime.setHours(0, 0, 0, 0);
-      await AsyncStorage.setItem("RESET_TIME", resetTime.toISOString());
       setHasSubmittedToday(true);
       setEntries(["", "", ""]);
       setPromptResponse("");
@@ -175,7 +190,11 @@ export default function Grateful() {
   };
 
   const formattedUnlockTime = new Date();
-  formattedUnlockTime.setHours(preferredUnlockTime ?? 20, 0, 0);
+  formattedUnlockTime.setHours(
+    preferredUnlockTime ?? DEFAULT_UNLOCK_TIME,
+    0,
+    0
+  );
 
   const formattedUnlockTimeString = formattedUnlockTime.toLocaleString(
     "en-US",

@@ -36,7 +36,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   const fetchUnlockTime = async () => {
     try {
-      const response = await fetch("http://localhost:5000/users/info", {
+      const response = await fetch("http://localhost:5000/users/unlocktime", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

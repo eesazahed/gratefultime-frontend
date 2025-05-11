@@ -7,7 +7,6 @@ import {
   Pressable,
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
 import { Container } from "../../components/ui/Container";
 import { Button } from "../../components/ui/Button";
@@ -98,7 +97,6 @@ const Profile = () => {
 
       if (response.ok) {
         setEntries((prev) => prev.filter((entry) => entry.id !== id));
-        await AsyncStorage.removeItem("RESET_TIME");
       } else {
         console.error("Failed to delete entry.");
       }
