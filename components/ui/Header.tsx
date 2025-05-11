@@ -12,8 +12,8 @@ export function Header({ title, style }: HeaderProps) {
       style={[
         {
           alignSelf: "center",
-          padding: 24,
-          marginTop: 24,
+          paddingVertical: 24,
+          marginTop: 48,
           marginBottom: 18,
         },
         style,

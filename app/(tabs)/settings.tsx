@@ -84,15 +84,10 @@ const Settings = () => {
     }
   };
 
-  const handleDecrement = () => {
-    const newHour = (parseInt(selectedHour) + 23) % 24;
-    setSelectedHour(newHour.toString());
-  };
-
-  const handleIncrement = () => {
-    const newHour = (parseInt(selectedHour) + 1) % 24;
-    setSelectedHour(newHour.toString());
-  };
+  const handleDecrement = () =>
+    setSelectedHour(((parseInt(selectedHour) + 23) % 24).toString());
+  const handleIncrement = () =>
+    setSelectedHour(((parseInt(selectedHour) + 1) % 24).toString());
 
   const formatHour = (hourString: string) => {
     const hour = parseInt(hourString, 10);
@@ -103,7 +98,7 @@ const Settings = () => {
   };
 
   return (
-    <Container style={styles.container}>
+    <Container>
       <Header title="Settings" />
 
       <ThemedText style={styles.label}>
@@ -156,10 +151,6 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
   label: {
     fontSize: 16,
     color: "#8f8f8f",

@@ -1,5 +1,5 @@
-import { StyleProp, View, ViewStyle } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { StyleProp, View, ViewStyle } from "react-native";
+import { useTheme } from "@react-navigation/native";
 
 interface ContainerProps {
   children: React.ReactNode;
@@ -32,4 +32,4 @@ export function Container({
       {children}
     </View>
   );
-} 
+}

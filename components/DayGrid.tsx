@@ -84,13 +84,10 @@ const DayGrid = ({
 const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: "column",
-    width: "100%",
-    height: 350,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%",
   },
   emptyDayCell: {
     width: "14%",

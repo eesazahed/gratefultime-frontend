@@ -19,7 +19,7 @@ const CalendarGrid = ({
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [entryDetails, setEntryDetails] = useState<any>(null);
 
-  const minDate = new Date(2025, 4, 1);
+  const minDate = new Date(2025, 1, 1);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const maxMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -111,26 +111,28 @@ const CalendarGrid = ({
   };
 
   return (
-    <View>
+    <View style={styles.calendar}>
       <Text style={styles.monthTitle}>
         {currentMonth.toLocaleString("default", { month: "long" })}{" "}
         {currentMonth.getFullYear()}
       </Text>
       <WeekHeader />
-      <DayGrid
-        days={days}
-        startDay={startDay}
-        entries={entries}
-        today={today}
-        currentMonth={currentMonth}
-        handleDayPress={handleDayPress}
-      />
-      <MonthNavigation
-        handlePreviousMonth={handlePreviousMonth}
-        handleNextMonth={handleNextMonth}
-        isAtMinMonth={isAtMinMonth}
-        isAtMaxMonth={isAtMaxMonth}
-      />
+      <View style={styles.calendarAndButtons}>
+        <DayGrid
+          days={days}
+          startDay={startDay}
+          entries={entries}
+          today={today}
+          currentMonth={currentMonth}
+          handleDayPress={handleDayPress}
+        />
+        <MonthNavigation
+          handlePreviousMonth={handlePreviousMonth}
+          handleNextMonth={handleNextMonth}
+          isAtMinMonth={isAtMinMonth}
+          isAtMaxMonth={isAtMaxMonth}
+        />
+      </View>
       <EntryDetailsModal
         visible={modalVisible}
         entryDetails={entryDetails}
@@ -141,12 +143,18 @@ const CalendarGrid = ({
 };
 
 const styles = StyleSheet.create({
+  calendar: { marginVertical: "auto" },
+  calendarAndButtons: {
+    // display: "flex",
+    // flexDirection: "column",
+    justifyContent: "space-between",
+    height: 400,
+  },
   monthTitle: {
     color: "#fff",
     fontSize: 28,
     fontWeight: "600",
     textAlign: "center",
-    marginTop: 40,
     marginBottom: 40,
   },
 });

@@ -217,6 +217,7 @@ export default function Grateful() {
             title="Unlock early"
             onPress={() => setIsLocked(false)}
             variant="outline"
+            style={styles.unlockButton}
           />
         )}
       </Container>
@@ -226,7 +227,7 @@ export default function Grateful() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
-        <Header title="What are you grateful for?" />
+        <Header title="I'm grateful for" />
 
         {entries.map((entry, i) => {
           const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
@@ -292,12 +293,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    marginVertical: 24,
-    textAlign: "center",
-  },
   prompt: {
     fontSize: 16,
     fontWeight: "500",
@@ -322,6 +317,10 @@ const styles = StyleSheet.create({
   lockedText: {
     fontSize: 18,
     textAlign: "center",
-    marginBottom: 64,
+    marginTop: 64,
+    marginBottom: 32,
+  },
+  unlockButton: {
+    marginTop: 32,
   },
 });
