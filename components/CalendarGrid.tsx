@@ -11,7 +11,7 @@ const CalendarGrid = ({
   currentMonth,
   setCurrentMonth,
 }: {
-  entries: { [key: string]: boolean };
+  entries: { [localTime: string]: string };
   currentMonth: Date;
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
 }) => {
@@ -19,7 +19,7 @@ const CalendarGrid = ({
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [entryDetails, setEntryDetails] = useState<any>(null);
 
-  const minDate = new Date(2025, 4, 1); // manually set start date: 2025, april, 1
+  const minDate = new Date(2025, 4, 1);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const maxMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -64,39 +64,43 @@ const CalendarGrid = ({
   };
 
   const handleDayPress = async (day: number) => {
-    const formattedDate = formatDate(
+    const localDate = formatDate(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
       day
     );
-    if (entries[formattedDate]) {
-      if (!token) {
-        console.error("No JWT token found");
+
+    const dbTimestamp = entries[localDate];
+    if (!dbTimestamp) return;
+
+    if (!token) {
+      console.error("No JWT token found");
+      return;
+    }
+    console.log(dbTimestamp, encodeURIComponent(dbTimestamp));
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:5000/entries/day?date=${encodeURIComponent(
+          dbTimestamp
+        )}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Error fetching entry details:", data);
         return;
       }
 
-      try {
-        const response = await fetch(
-          `http://127.0.0.1:5000/entries/day?date=${formattedDate}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = await response.json();
-
-        if (!response.ok) {
-          console.error("Error fetching entry details:", data);
-          return;
-        }
-
-        setEntryDetails(data.data);
-        setModalVisible(true);
-      } catch (error) {
-        console.error("Error fetching entry details:", error);
-      }
+      setEntryDetails(data.data);
+      setModalVisible(true);
+    } catch (error) {
+      console.error("Error fetching entry details:", error);
     }
   };
 
@@ -127,7 +131,6 @@ const CalendarGrid = ({
         isAtMinMonth={isAtMinMonth}
         isAtMaxMonth={isAtMaxMonth}
       />
-
       <EntryDetailsModal
         visible={modalVisible}
         entryDetails={entryDetails}
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
   monthTitle: {
     color: "#fff",
     fontSize: 28,
-    fontWeight: 600,
+    fontWeight: "600",
     textAlign: "center",
     marginTop: 40,
     marginBottom: 40,

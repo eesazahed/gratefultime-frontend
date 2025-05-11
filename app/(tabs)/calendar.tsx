@@ -7,7 +7,7 @@ import { Container } from "../../components/ui/Container";
 
 const Calendar = () => {
   const { token } = useAuth();
-  const [entries, setEntries] = useState<{ [key: string]: boolean }>({});
+  const [entries, setEntries] = useState<{ [localTime: string]: string }>({});
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
   useFocusEffect(
@@ -33,14 +33,16 @@ const Calendar = () => {
             return;
           }
 
-          const entryMap: { [key: string]: boolean } = {};
-          data.data.forEach((date: string) => {
-            const localDate = new Date(date + "+00:00").toLocaleDateString(
+          const entryMap: { [localTime: string]: string } = {};
+
+          data.data.forEach((utcTimestamp: string) => {
+            const localTime = new Date(utcTimestamp).toLocaleDateString(
               "en-CA"
             );
-            entryMap[localDate] = true;
+            entryMap[localTime] = utcTimestamp;
           });
 
+          console.log(entryMap);
           setEntries(entryMap);
         } catch (error) {
           console.error("Error fetching entries:", error);
