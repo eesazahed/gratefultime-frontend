@@ -1,7 +1,7 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../context/AuthContext";
+import { useUser } from "../../context/UserContext";
 import { useFocusEffect } from "expo-router";
 import { Container } from "../../components/ui/Container";
 import { Input } from "../../components/ui/Input";
@@ -9,6 +9,7 @@ import { TextArea } from "../../components/ui/TextArea";
 import { Button } from "../../components/ui/Button";
 import { ThemedText } from "../../components/ThemedText";
 import { Header } from "../../components/ui/Header";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type EntryKey =
   | "entry1"
@@ -27,13 +28,13 @@ type Errors = {
 
 export default function Grateful() {
   const { token } = useAuth();
+  const { fetchUnlockTime, preferredUnlockTime } = useUser();
 
   const [entries, setEntries] = useState(["", "", ""]);
   const [aiPrompt, setAiPrompt] = useState("");
   const [promptResponse, setPromptResponse] = useState("");
   const [isLocked, setIsLocked] = useState(true);
   const [hasSubmittedToday, setHasSubmittedToday] = useState(false);
-  const [notificationHour, setNotificationHour] = useState<number>(20); // Default to 20
 
   const [errors, setErrors] = useState<Errors>({
     entry1: "",
@@ -51,28 +52,18 @@ export default function Grateful() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchNotificationHour();
+      fetchUnlockTime();
       checkIfUnlocked();
       generatePrompt();
       checkResetTime();
-    }, [token, notificationHour])
+    }, [token, preferredUnlockTime])
   );
 
-  const fetchNotificationHour = async () => {
-    const storedHour = await AsyncStorage.getItem("NOTIFICATION_HOUR");
-    if (storedHour) {
-      setNotificationHour(Number(storedHour));
-    } else {
-      // Default to 20 if not set
-      await AsyncStorage.setItem("NOTIFICATION_HOUR", "20");
-      setNotificationHour(20);
-    }
-  };
-
   const checkIfUnlocked = () => {
+    const hour = preferredUnlockTime ?? 20; // 8pm default
     const now = new Date();
     const unlockTime = new Date();
-    unlockTime.setHours(notificationHour, 0, 0); // Use the stored notification hour
+    unlockTime.setHours(hour, 0, 0);
     const midnight = new Date();
     midnight.setHours(23, 59, 59);
     setIsLocked(!(now >= unlockTime && now <= midnight));
@@ -184,7 +175,7 @@ export default function Grateful() {
   };
 
   const formattedUnlockTime = new Date();
-  formattedUnlockTime.setHours(notificationHour, 0, 0);
+  formattedUnlockTime.setHours(preferredUnlockTime ?? 20, 0, 0);
 
   const formattedUnlockTimeString = formattedUnlockTime.toLocaleString(
     "en-US",
