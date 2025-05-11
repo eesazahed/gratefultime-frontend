@@ -13,6 +13,7 @@ interface ButtonProps {
   title: string;
   variant?: "primary" | "secondary" | "outline";
   size?: "small" | "medium" | "large";
+  largeText?: boolean;
   disabled?: boolean;
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
@@ -25,6 +26,7 @@ export function Button({
   title,
   variant = "primary",
   size = "medium",
+  largeText = false,
   disabled = false,
   loading = false,
   style,
@@ -80,7 +82,7 @@ export function Button({
           <ThemedText
             style={{
               color: getTextColor(),
-              fontSize: size === "small" ? 14 : 16,
+              fontSize: largeText ? 24 : 16,
               fontWeight: "600",
               marginHorizontal: leftIcon || rightIcon ? 8 : 0,
             }}
