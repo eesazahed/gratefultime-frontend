@@ -7,6 +7,7 @@ import { Input } from "../../components/ui/Input";
 import { Button } from "../../components/ui/Button";
 import { ThemedText } from "../../components/ThemedText";
 import { Header } from "../../components/ui/Header";
+import { BackendServer } from "@/constants/BackendServer";
 
 type Errors = {
   email: string;
@@ -34,7 +35,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/auth/signup", {
+      const response = await fetch(`${BackendServer}/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

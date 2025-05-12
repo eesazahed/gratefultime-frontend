@@ -9,6 +9,7 @@ import { TextArea } from "../../components/ui/TextArea";
 import { Button } from "../../components/ui/Button";
 import { ThemedText } from "../../components/ThemedText";
 import { Header } from "../../components/ui/Header";
+import { BackendServer } from "@/constants/BackendServer";
 
 type EntryKey =
   | "entry1"
@@ -75,7 +76,7 @@ export default function Grateful() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/users/recententrytimestamp",
+        `${BackendServer}/users/recententrytimestamp`,
         {
           method: "GET",
           headers: {
@@ -124,7 +125,7 @@ export default function Grateful() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/entries", {
+      const response = await fetch(`${BackendServer}/entries`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,7 +210,7 @@ export default function Grateful() {
       <Container style={styles.centered}>
         <ThemedText style={styles.lockedText}>
           {hasSubmittedToday
-            ? "You've already journaled today. Come back tomorrow!"
+            ? "You've already journaled today \n\n Come back tomorrow!"
             : `Your gratitude journal unlocks at ${formattedUnlockTimeString}`}
         </ThemedText>
         {!hasSubmittedToday && (
@@ -329,5 +330,9 @@ const styles = StyleSheet.create({
   },
   unlockButton: {
     marginTop: 32,
+    paddingHorizontal: 20,
+    backgroundColor: "#1c1c1c",
+    borderWidth: 1,
+    borderColor: "#333",
   },
 });

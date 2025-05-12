@@ -7,6 +7,7 @@ import { Container } from "../../components/ui/Container";
 import { Button } from "../../components/ui/Button";
 import { ThemedText } from "../../components/ThemedText";
 import { Header } from "../../components/ui/Header";
+import { BackendServer } from "@/constants/BackendServer";
 
 const Settings = () => {
   const router = useRouter();
@@ -57,7 +58,7 @@ const Settings = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/users/settings", {
+      const response = await fetch(`${BackendServer}/users/settings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +114,11 @@ const Settings = () => {
         <ThemedText style={{ ...styles.label, marginTop: 0 }}>
           Enable Notifications
         </ThemedText>
-        <Switch value={notifsEnabled} onValueChange={setNotifsEnabled} />
+        <Switch
+          value={notifsEnabled}
+          onValueChange={setNotifsEnabled}
+          ios_backgroundColor="gray"
+        />
       </View>
       {error.notifsOn && (
         <ThemedText style={styles.errorText}>{error.notifsOn}</ThemedText>
@@ -129,7 +134,9 @@ const Settings = () => {
           style={styles.adjustButton}
           largeText
         />
-        <ThemedText style={styles.hourDisplay}>{selectedHour}</ThemedText>
+        <View style={styles.hourDisplay}>
+          <ThemedText>{selectedHour}</ThemedText>
+        </View>
         <Button
           title="+"
           onPress={handleIncrement}
@@ -193,10 +200,10 @@ const styles = StyleSheet.create({
     userSelect: "none",
   },
   hourDisplay: {
-    width: "100%",
     height: 50,
     borderRadius: 8,
     display: "flex",
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#1c1c1c",

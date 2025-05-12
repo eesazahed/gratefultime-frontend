@@ -11,7 +11,6 @@ interface ContainerProps {
 export function Container({
   children,
   style,
-  padding = 16,
   backgroundColor,
 }: ContainerProps) {
   const { colors } = useTheme();
@@ -20,7 +19,6 @@ export function Container({
     <View
       style={[
         {
-          padding,
           backgroundColor: backgroundColor ?? colors.background,
           flex: 1,
           width: "85%",

@@ -11,8 +11,7 @@ export function Header({ title, style }: HeaderProps) {
     <View
       style={[
         {
-          alignSelf: "center",
-          paddingVertical: 24,
+          marginHorizontal: "auto",
           marginTop: 48,
           marginBottom: 18,
         },
@@ -21,6 +20,7 @@ export function Header({ title, style }: HeaderProps) {
     >
       <ThemedText
         style={{
+          paddingVertical: 28,
           fontSize: 28,
           fontWeight: 600,
           flex: 1,

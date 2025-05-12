@@ -68,7 +68,7 @@ export function Button({
           alignItems: "center",
           justifyContent: "center",
           paddingVertical: getPadding().vertical,
-          paddingHorizontal: getPadding().horizontal,
+          // paddingHorizontal: getPadding().horizontal,
           opacity: disabled ? 0.7 : 1,
         },
         style,

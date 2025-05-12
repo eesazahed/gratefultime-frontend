@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 import { useAuth } from "./AuthContext";
+import { BackendServer } from "@/constants/BackendServer";
 
 interface UserContextType {
   preferredUnlockTime: number | null;
@@ -38,7 +39,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   const fetchUnlockTime = async () => {
     try {
-      const response = await fetch("http://localhost:5000/users/info", {
+      const response = await fetch(`${BackendServer}/users/info`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 
 import { useAuth } from "@/context/AuthContext";
@@ -16,7 +16,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "white",
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
+        // tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: { position: "absolute" },
           default: {
@@ -33,7 +33,9 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => <IconSymbol name="home" color={color} />,
+          tabBarIcon: () => (
+            <MaterialIcons name="home" color="white" size={28} />
+          ),
           tabBarItemStyle: {
             marginVertical: "auto",
           },
@@ -43,8 +45,8 @@ export default function TabLayout() {
         name="signup"
         options={{
           title: "Sign up",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol name="person-add" color={color} />
+          tabBarIcon: () => (
+            <MaterialIcons name="person-add" color="white" size={28} />
           ),
           href: !token ? "/(tabs)/signup" : null,
           tabBarItemStyle: {
@@ -56,7 +58,9 @@ export default function TabLayout() {
         name="login"
         options={{
           title: "Login",
-          tabBarIcon: ({ color }) => <IconSymbol name="login" color={color} />,
+          tabBarIcon: () => (
+            <MaterialIcons name="login" color="white" size={28} />
+          ),
           href: !token ? "/(tabs)/login" : null,
           tabBarItemStyle: {
             marginVertical: "auto",
@@ -67,7 +71,9 @@ export default function TabLayout() {
         name="grateful"
         options={{
           title: "Grateful",
-          tabBarIcon: ({ color }) => <IconSymbol name="create" color={color} />,
+          tabBarIcon: () => (
+            <MaterialIcons name="create" color="white" size={28} />
+          ),
           href: token ? "/(tabs)/grateful" : null,
           tabBarItemStyle: {
             marginVertical: "auto",
@@ -78,8 +84,8 @@ export default function TabLayout() {
         name="calendar"
         options={{
           title: "Calendar",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol name="calendar-month" color={color} />
+          tabBarIcon: () => (
+            <MaterialIcons name="calendar-month" color="white" size={28} />
           ),
           href: token ? "/(tabs)/calendar" : null,
           tabBarItemStyle: {
@@ -91,7 +97,9 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <IconSymbol name="person" color={color} />,
+          tabBarIcon: () => (
+            <MaterialIcons name="person" color="white" size={28} />
+          ),
           href: token ? "/(tabs)/profile" : null,
           tabBarItemStyle: {
             marginVertical: "auto",
@@ -102,8 +110,8 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol name="settings" color={color} />
+          tabBarIcon: () => (
+            <MaterialIcons name="settings" color="white" size={28} />
           ),
           href: token ? "/(tabs)/settings" : null,
           tabBarItemStyle: {
