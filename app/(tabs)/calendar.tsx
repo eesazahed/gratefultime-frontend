@@ -13,7 +13,6 @@ const Calendar = () => {
   useFocusEffect(
     useCallback(() => {
       const fetchEntries = async () => {
-        console.log("Fetched");
         try {
           if (!token) {
             console.error("JWT token not found");
@@ -42,7 +41,6 @@ const Calendar = () => {
             entryMap[localTime] = utcTimestamp;
           });
 
-          console.log(entryMap);
           setEntries(entryMap);
         } catch (error) {
           console.error("Error fetching entries:", error);

@@ -52,7 +52,7 @@ export function Input({
         placeholderTextColor={colors.text + "80"}
         {...props}
       />
-      {error && (
+      {error ? (
         <ThemedText
           style={{
             color: colors.notification,
@@ -62,6 +62,8 @@ export function Input({
         >
           {error}
         </ThemedText>
+      ) : (
+        <></>
       )}
     </View>
   );

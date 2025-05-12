@@ -1,4 +1,3 @@
-import { StyleProp, ViewStyle } from "react-native";
 import { Input, InputProps } from "./Input";
 
 interface TextAreaProps extends Omit<InputProps, "multiline"> {

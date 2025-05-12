@@ -77,7 +77,7 @@ const CalendarGrid = ({
       console.error("No JWT token found");
       return;
     }
-    console.log(dbTimestamp, encodeURIComponent(dbTimestamp));
+
     try {
       const response = await fetch(
         `http://127.0.0.1:5000/entries/day?date=${encodeURIComponent(

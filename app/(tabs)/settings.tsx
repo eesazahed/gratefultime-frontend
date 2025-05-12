@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Switch } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
@@ -11,26 +11,32 @@ import { Header } from "../../components/ui/Header";
 const Settings = () => {
   const router = useRouter();
   const { token, logout } = useAuth();
-  const { preferredUnlockTime, loading, fetchUnlockTime } = useUser();
+  const { preferredUnlockTime, notifsOn, loading, fetchUnlockTime } = useUser();
 
-  const [selectedHour, setSelectedHour] = useState<string>("");
+  const [selectedHour, setSelectedHour] = useState<string>(
+    preferredUnlockTime?.toString() || ""
+  );
+  const [notifsEnabled, setNotifsEnabled] = useState<boolean>(notifsOn);
   const [error, setError] = useState<{
     unlockTime?: string;
     submission?: string;
-  }>({
-    unlockTime: "",
-    submission: "",
-  });
-
-  const [saveStatus, setSaveStatus] = useState<"idle" | "success">("idle");
+    notifsOn?: string;
+  }>({});
+  const [isDirty, setIsDirty] = useState<boolean>(false);
 
   useEffect(() => {
     if (preferredUnlockTime !== null) {
       setSelectedHour(preferredUnlockTime.toString());
-    } else {
-      fetchUnlockTime();
+      setNotifsEnabled(notifsOn);
     }
-  }, [preferredUnlockTime, fetchUnlockTime]);
+  }, [preferredUnlockTime, notifsOn]);
+
+  useEffect(() => {
+    const hasChanges =
+      selectedHour !== preferredUnlockTime?.toString() ||
+      notifsEnabled !== notifsOn;
+    setIsDirty(hasChanges);
+  }, [selectedHour, notifsEnabled, preferredUnlockTime, notifsOn]);
 
   const handleLogout = async () => {
     try {
@@ -51,23 +57,26 @@ const Settings = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/users/unlocktime", {
-        method: "PUT",
+      const response = await fetch("http://localhost:5000/users/settings", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           preferred_unlock_time: parsedHour,
+          notifs_on: notifsEnabled,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        const newErrors = { unlockTime: "", submission: "" };
+        const newErrors = { unlockTime: "", notifsOn: "", submission: "" };
         if (data.errorCode === "unlockTime") {
           newErrors.unlockTime = data.message;
+        } else if (data.errorCode === "notifsOn") {
+          newErrors.notifsOn = data.message;
         } else {
           newErrors.submission = data.message || "Error saving settings.";
         }
@@ -75,9 +84,8 @@ const Settings = () => {
         return;
       }
 
-      setError({ unlockTime: "", submission: "" });
-      setSaveStatus("success");
-      setTimeout(() => setSaveStatus("idle"), 1000);
+      setError({ unlockTime: "", notifsOn: "", submission: "" });
+      setIsDirty(false);
     } catch (err) {
       console.error("Network error:", err);
       setError({ submission: "Could not connect to server." });
@@ -101,10 +109,19 @@ const Settings = () => {
     <Container>
       <Header title="Settings" />
 
+      <View style={styles.switchContainer}>
+        <ThemedText style={{ ...styles.label, marginTop: 0 }}>
+          Enable Notifications
+        </ThemedText>
+        <Switch value={notifsEnabled} onValueChange={setNotifsEnabled} />
+      </View>
+      {error.notifsOn && (
+        <ThemedText style={styles.errorText}>{error.notifsOn}</ThemedText>
+      )}
+
       <ThemedText style={styles.label}>
         Preferred unlock time: {formatHour(selectedHour)}
       </ThemedText>
-
       <View style={styles.hourSelector}>
         <Button
           title="-"
@@ -120,22 +137,23 @@ const Settings = () => {
           largeText
         />
       </View>
-      {error.unlockTime ? (
+
+      {error.unlockTime && (
         <ThemedText style={styles.errorText}>{error.unlockTime}</ThemedText>
-      ) : null}
+      )}
 
       <View style={styles.buttonGroup}>
-        {error.submission ? (
-          <ThemedText style={styles.errorText}>{error.submission}</ThemedText>
-        ) : null}
+        {error.submission && (
+          <ThemedText style={{ ...styles.errorText, textAlign: "center" }}>
+            {error.submission}
+          </ThemedText>
+        )}
 
         <Button
-          title={saveStatus === "success" ? "Saved!" : "Save Settings"}
+          title="Save Settings"
           onPress={handleSaveSettings}
-          style={[
-            styles.settingsButton,
-            saveStatus === "success" && styles.successButton,
-          ]}
+          disabled={!isDirty}
+          style={[styles.settingsButton, !isDirty && styles.disabledButton]}
           loading={loading}
         />
 
@@ -155,6 +173,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#8f8f8f",
     fontStyle: "italic",
+    marginTop: 20,
   },
   hourSelector: {
     width: "100%",
@@ -163,6 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
+    marginBottom: 10,
   },
   adjustButton: {
     width: 50,
@@ -185,19 +205,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     userSelect: "none",
   },
+  switchContainer: {
+    marginTop: 20,
+    marginBottom: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   settingsButton: {
     backgroundColor: "#323232",
-    marginVertical: 20,
+    marginTop: 5,
+    marginBottom: 20,
     transitionDuration: "0.25s",
   },
-  successButton: {
-    backgroundColor: "#28a745",
+  disabledButton: {
+    opacity: 0.5,
   },
   errorText: {
     color: "red",
     fontSize: 14,
-    marginTop: 14,
-    textAlign: "center",
+    marginBottom: 14,
   },
   buttonGroup: {
     marginVertical: 40,

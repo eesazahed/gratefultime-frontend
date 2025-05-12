@@ -9,6 +9,7 @@ import { useAuth } from "./AuthContext";
 
 interface UserContextType {
   preferredUnlockTime: number | null;
+  notifsOn: boolean;
   loading: boolean;
   fetchUnlockTime: () => void;
 }
@@ -32,11 +33,12 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [preferredUnlockTime, setPreferredUnlockTime] = useState<number | null>(
     null
   );
+  const [notifsOn, setNotifsOn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchUnlockTime = async () => {
     try {
-      const response = await fetch("http://localhost:5000/users/unlocktime", {
+      const response = await fetch("http://localhost:5000/users/info", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,6 +52,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
       const data = await response.json();
       setPreferredUnlockTime(data.data.preferred_unlock_time);
+      setNotifsOn(data.data.notifs_on);
     } catch (error) {
       console.error("Error fetching unlock time:", error);
     } finally {
@@ -67,6 +70,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     <UserContext.Provider
       value={{
         preferredUnlockTime,
+        notifsOn,
         loading,
         fetchUnlockTime,
       }}

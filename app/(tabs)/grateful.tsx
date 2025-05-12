@@ -277,7 +277,14 @@ export default function Grateful() {
         <Button
           title="Save Entry"
           onPress={saveEntries}
-          style={styles.saveButton}
+          style={{
+            ...styles.saveButton,
+            backgroundColor:
+              entries[0] && entries[1] && entries[2] && promptResponse
+                ? "#32a852"
+                : "#323232",
+          }}
+          disabled={!(entries[0] && entries[1] && entries[2] && promptResponse)}
         />
       </Container>
     </ScrollView>
@@ -306,7 +313,7 @@ const styles = StyleSheet.create({
     marginBottom: 52,
   },
   saveButton: {
-    backgroundColor: "#32a852",
+    transitionDuration: "0.25s",
     marginBottom: 32,
   },
   errorText: {
