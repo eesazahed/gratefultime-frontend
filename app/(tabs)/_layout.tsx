@@ -3,7 +3,6 @@ import React from "react";
 import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import TabBarBackground from "@/components/ui/TabBarBackground";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -16,15 +15,19 @@ export default function TabLayout() {
         tabBarActiveTintColor: "white",
         headerShown: false,
         tabBarButton: HapticTab,
-        // tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
-          ios: { position: "absolute" },
+          ios: {
+            position: "absolute",
+            height: 100,
+            display: token ? "flex" : "none",
+          },
           default: {
-            height: 80,
+            height: 100,
           },
         }),
         tabBarLabelPosition: "below-icon",
         tabBarIconStyle: {
+          marginTop: 15,
           marginBottom: 5,
         },
       }}
@@ -36,35 +39,7 @@ export default function TabLayout() {
           tabBarIcon: () => (
             <MaterialIcons name="home" color="white" size={28} />
           ),
-          tabBarItemStyle: {
-            marginVertical: "auto",
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="signup"
-        options={{
-          title: "Sign up",
-          tabBarIcon: () => (
-            <MaterialIcons name="person-add" color="white" size={28} />
-          ),
-          href: !token ? "/(tabs)/signup" : null,
-          tabBarItemStyle: {
-            marginVertical: "auto",
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="login"
-        options={{
-          title: "Login",
-          tabBarIcon: () => (
-            <MaterialIcons name="login" color="white" size={28} />
-          ),
-          href: !token ? "/(tabs)/login" : null,
-          tabBarItemStyle: {
-            marginVertical: "auto",
-          },
+          href: token ? "/(tabs)" : null,
         }}
       />
       <Tabs.Screen
@@ -75,9 +50,6 @@ export default function TabLayout() {
             <MaterialIcons name="create" color="white" size={28} />
           ),
           href: token ? "/(tabs)/grateful" : null,
-          tabBarItemStyle: {
-            marginVertical: "auto",
-          },
         }}
       />
       <Tabs.Screen
@@ -88,9 +60,6 @@ export default function TabLayout() {
             <MaterialIcons name="calendar-month" color="white" size={28} />
           ),
           href: token ? "/(tabs)/calendar" : null,
-          tabBarItemStyle: {
-            marginVertical: "auto",
-          },
         }}
       />
       <Tabs.Screen
@@ -101,9 +70,6 @@ export default function TabLayout() {
             <MaterialIcons name="person" color="white" size={28} />
           ),
           href: token ? "/(tabs)/profile" : null,
-          tabBarItemStyle: {
-            marginVertical: "auto",
-          },
         }}
       />
       <Tabs.Screen
@@ -114,9 +80,6 @@ export default function TabLayout() {
             <MaterialIcons name="settings" color="white" size={28} />
           ),
           href: token ? "/(tabs)/settings" : null,
-          tabBarItemStyle: {
-            marginVertical: "auto",
-          },
         }}
       />
     </Tabs>

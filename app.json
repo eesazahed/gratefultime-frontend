@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "my-app-mobile",
-    "slug": "my-app-mobile",
+    "name": "gratefulness-mobile",
+    "slug": "gratefulness-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,6 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "usesAppleSignIn": true,
       "supportsTablet": true
     },
     "android": {
@@ -23,6 +24,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "expo-apple-authentication",
       "expo-router",
       [
         "expo-splash-screen",

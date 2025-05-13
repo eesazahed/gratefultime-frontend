@@ -1,17 +1,26 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { Container } from "../../components/ui/Container";
 import { ThemedText } from "../../components/ThemedText";
+import AppleSignInPage from "../../components/AppleSignInPage";
 
 const Home = () => {
   const { token } = useAuth();
 
   return (
     <Container style={styles.container}>
-      <ThemedText style={styles.text}>
-        {token ? "You are signed in!" : "You are not signed in!"}
-      </ThemedText>
+      {token && (
+        <View>
+          <ThemedText style={styles.text}>You are signed in!</ThemedText>
+        </View>
+      )}
+
+      {!token && (
+        <View>
+          <AppleSignInPage />
+        </View>
+      )}
     </Container>
   );
 };
