@@ -1,24 +1,67 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { Container } from "../../components/ui/Container";
 import { ThemedText } from "../../components/ThemedText";
 import AppleSignInPage from "../../components/AppleSignInPage";
-import NotifPushToken from "../../components/NotifPushToken";
+import { useFocusEffect } from "expo-router";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import Constants from "expo-constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BackendServer } from "@/constants/BackendServer";
+
+const getExpoPushToken = async (userAuthToken: string | null) => {
+  if (Device.isDevice && userAuthToken) {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== "granted") return;
+
+    try {
+      const { data: pushToken } = await Notifications.getExpoPushTokenAsync({
+        projectId: Constants.expoConfig?.extra?.eas.projectId,
+      });
+
+      if (pushToken) {
+        await fetch(`${BackendServer}/users/update_push_token`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userAuthToken}`,
+          },
+          body: JSON.stringify({ expoPushToken: pushToken }),
+        });
+
+        await AsyncStorage.setItem("hasSentPushToken", "true");
+      }
+    } catch (error) {
+      console.error("Error generating or sending token:", error);
+    }
+  }
+};
 
 const Home = () => {
   const { token } = useAuth();
 
+  useFocusEffect(
+    useCallback(() => {
+      const handlePushToken = async () => {
+        const hasSentToken = await AsyncStorage.getItem("hasSentPushToken");
+        if (hasSentToken !== "true" && token) {
+          await getExpoPushToken(token);
+        }
+      };
+
+      handlePushToken();
+    }, [token])
+  );
+
   return (
     <Container style={styles.container}>
-      {token && (
+      {token ? (
         <View>
           <ThemedText style={styles.text}>You are signed in!</ThemedText>
-          <NotifPushToken userAuthToken={token} />
         </View>
-      )}
-
-      {!token && (
+      ) : (
         <View>
           <AppleSignInPage />
         </View>

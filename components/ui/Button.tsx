@@ -1,7 +1,6 @@
 import React from "react";
 import {
   ActivityIndicator,
-  Pressable,
   StyleProp,
   TouchableOpacity,
   ViewStyle,
@@ -59,6 +58,7 @@ export function Button({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
+      activeOpacity={0.8}
       style={[
         {
           backgroundColor: getBackgroundColor(),

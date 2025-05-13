@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState, useCallback } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
@@ -28,7 +28,7 @@ type Errors = {
 
 export default function Grateful() {
   const { token } = useAuth();
-  const { fetchUnlockTime, preferredUnlockTime } = useUser();
+  const { preferredUnlockTime, loading } = useUser();
 
   const [entries, setEntries] = useState(["", "", ""]);
   const [aiPrompt, setAiPrompt] = useState("");
@@ -58,8 +58,7 @@ export default function Grateful() {
       let isActive = true;
       const runChecks = async () => {
         setIsLoading(true);
-        await fetchUnlockTime();
-        if (isActive) {
+        if (!loading) {
           checkIfUnlocked();
           await checkIfSubmittedToday();
           generatePrompt();
@@ -70,7 +69,7 @@ export default function Grateful() {
       return () => {
         isActive = false;
       };
-    }, [token, preferredUnlockTime])
+    }, [token, preferredUnlockTime, loading])
   );
 
   const checkIfUnlocked = () => {

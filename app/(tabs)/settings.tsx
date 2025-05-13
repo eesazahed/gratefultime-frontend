@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Switch } from "react-native";
+import React, { useState, useCallback } from "react";
+import { StyleSheet, View, Switch, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
@@ -8,6 +8,7 @@ import { Button } from "../../components/ui/Button";
 import { ThemedText } from "../../components/ThemedText";
 import { Header } from "../../components/ui/Header";
 import { BackendServer } from "@/constants/BackendServer";
+import { useFocusEffect } from "expo-router";
 
 const Settings = () => {
   const router = useRouter();
@@ -24,20 +25,6 @@ const Settings = () => {
     notifsOn?: string;
   }>({});
   const [isDirty, setIsDirty] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (preferredUnlockTime !== null) {
-      setSelectedHour(preferredUnlockTime.toString());
-      setNotifsEnabled(notifsOn);
-    }
-  }, [preferredUnlockTime, notifsOn]);
-
-  useEffect(() => {
-    const hasChanges =
-      selectedHour !== preferredUnlockTime?.toString() ||
-      notifsEnabled !== notifsOn;
-    setIsDirty(hasChanges);
-  }, [selectedHour, notifsEnabled, preferredUnlockTime, notifsOn]);
 
   const handleLogout = async () => {
     try {
@@ -95,6 +82,7 @@ const Settings = () => {
 
   const handleDecrement = () =>
     setSelectedHour(((parseInt(selectedHour) + 23) % 24).toString());
+
   const handleIncrement = () =>
     setSelectedHour(((parseInt(selectedHour) + 1) % 24).toString());
 
@@ -105,6 +93,72 @@ const Settings = () => {
     const hour12 = hour % 12 === 0 ? 12 : hour % 12;
     return `${hour12}:00 ${ampm}`;
   };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Confirm Deletion",
+      "All of your entries will be permanently deleted. Are you sure?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const response = await fetch(
+                `${BackendServer}/users/delete_account`,
+                {
+                  method: "DELETE",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+
+              const data = await response.json();
+
+              if (!response.ok) {
+                setError({
+                  submission: data.message || "Error deleting account.",
+                });
+                return;
+              }
+
+              // If deletion is successful, log out and redirect
+              await logout();
+              router.push("/");
+            } catch (err) {
+              console.error("Network error:", err);
+              setError({ submission: "Could not connect to server." });
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (preferredUnlockTime !== null) {
+        setSelectedHour(preferredUnlockTime.toString());
+        setNotifsEnabled(notifsOn);
+      }
+    }, [preferredUnlockTime, notifsOn])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const hasChanges =
+        selectedHour !== preferredUnlockTime?.toString() ||
+        notifsEnabled !== notifsOn;
+      setIsDirty(hasChanges);
+    }, [selectedHour, notifsEnabled, preferredUnlockTime, notifsOn])
+  );
 
   return (
     <Container>
@@ -169,6 +223,12 @@ const Settings = () => {
           onPress={handleLogout}
           loading={loading}
           style={styles.settingsButton}
+        />
+
+        <Button
+          title="Delete Account"
+          onPress={handleDeleteAccount}
+          style={[styles.settingsButton, { backgroundColor: "darkred" }]}
         />
       </View>
     </Container>
