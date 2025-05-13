@@ -4,10 +4,32 @@ import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
+import { useEffect } from "react";
 
 const AppleSignInPage = () => {
   const router = useRouter();
   const { login } = useAuth();
+
+  useEffect(() => {
+    const checkServerConnection = async () => {
+      try {
+        const response = await fetch(`${BackendServer}/`);
+        if (!response.ok) {
+          console.error(
+            "Server connection failed with status:",
+            response.status
+          );
+        } else {
+          const result = await response.text();
+          console.log("Server connection successful:", result);
+        }
+      } catch (error) {
+        console.error("Server connection error:", error);
+      }
+    };
+
+    checkServerConnection();
+  }, []);
 
   const handleAppleSignIn = async () => {
     try {

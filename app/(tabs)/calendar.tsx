@@ -4,6 +4,7 @@ import CalendarGrid from "../../components/CalendarGrid";
 import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect } from "expo-router";
 import { Container } from "../../components/ui/Container";
+import { BackendServer } from "@/constants/BackendServer";
 
 const Calendar = () => {
   const { token } = useAuth();
@@ -19,7 +20,7 @@ const Calendar = () => {
             return;
           }
 
-          const response = await fetch(`http://127.0.0.1:5000/entries/days`, {
+          const response = await fetch(`${BackendServer}/entries/days`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,

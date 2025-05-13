@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "nowrap",
     width: "100%",
-    marginBottom: 10,
+    marginVertical: 10,
     justifyContent: "space-evenly",
   },
   weekDayWrapper: {

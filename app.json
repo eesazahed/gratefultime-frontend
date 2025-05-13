@@ -26,6 +26,7 @@
     "plugins": [
       "expo-apple-authentication",
       "expo-router",
+      "expo-notifications",
       [
         "expo-splash-screen",
         {
@@ -38,6 +39,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6e5f7207-e065-403b-af34-aa6ab7c821b3"
+      }
+    },
+    "owner": "eszhd"
   }
 }

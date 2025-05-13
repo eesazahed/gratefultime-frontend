@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { Container } from "../../components/ui/Container";
 import { ThemedText } from "../../components/ThemedText";
 import AppleSignInPage from "../../components/AppleSignInPage";
+import NotifPushToken from "../../components/NotifPushToken";
 
 const Home = () => {
   const { token } = useAuth();
@@ -13,6 +14,7 @@ const Home = () => {
       {token && (
         <View>
           <ThemedText style={styles.text}>You are signed in!</ThemedText>
+          <NotifPushToken userAuthToken={token} />
         </View>
       )}
 

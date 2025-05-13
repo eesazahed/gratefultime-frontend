@@ -12,7 +12,7 @@ export function Header({ title, style }: HeaderProps) {
       style={[
         {
           marginHorizontal: "auto",
-          marginTop: 48,
+          marginTop: 64,
           marginBottom: 18,
         },
         style,
@@ -24,6 +24,7 @@ export function Header({ title, style }: HeaderProps) {
           fontSize: 28,
           fontWeight: 600,
           flex: 1,
+          color: "#fff",
         }}
       >
         {title}

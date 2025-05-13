@@ -5,6 +5,8 @@ import WeekHeader from "./WeekHeader";
 import DayGrid from "./DayGrid";
 import EntryDetailsModal from "./EntryDetailsModal";
 import { useAuth } from "../context/AuthContext";
+import { BackendServer } from "@/constants/BackendServer";
+import { Header } from "./ui/Header";
 
 const CalendarGrid = ({
   entries,
@@ -80,9 +82,7 @@ const CalendarGrid = ({
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/entries/day?date=${encodeURIComponent(
-          dbTimestamp
-        )}`,
+        `${BackendServer}/entries/day?date=${encodeURIComponent(dbTimestamp)}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -111,11 +111,12 @@ const CalendarGrid = ({
   };
 
   return (
-    <View style={styles.calendar}>
-      <Text style={styles.monthTitle}>
-        {currentMonth.toLocaleString("default", { month: "long" })}{" "}
-        {currentMonth.getFullYear()}
-      </Text>
+    <View>
+      <Header
+        title={` ${currentMonth.toLocaleString("default", {
+          month: "long",
+        })} ${currentMonth.getFullYear()}`}
+      />
       <WeekHeader />
       <View style={styles.calendarAndButtons}>
         <DayGrid
@@ -143,19 +144,9 @@ const CalendarGrid = ({
 };
 
 const styles = StyleSheet.create({
-  calendar: { marginVertical: "auto" },
   calendarAndButtons: {
-    // display: "flex",
-    // flexDirection: "column",
     justifyContent: "space-between",
     height: 400,
-  },
-  monthTitle: {
-    color: "#fff",
-    fontSize: 28,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 40,
   },
 });
 

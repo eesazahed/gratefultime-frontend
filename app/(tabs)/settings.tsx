@@ -12,7 +12,7 @@ import { BackendServer } from "@/constants/BackendServer";
 const Settings = () => {
   const router = useRouter();
   const { token, logout } = useAuth();
-  const { preferredUnlockTime, notifsOn, loading, fetchUnlockTime } = useUser();
+  const { preferredUnlockTime, notifsOn, loading } = useUser();
 
   const [selectedHour, setSelectedHour] = useState<string>(
     preferredUnlockTime?.toString() || ""

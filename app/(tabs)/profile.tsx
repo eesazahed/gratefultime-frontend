@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
-  View,
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect } from "expo-router";

@@ -35,6 +35,7 @@ export default function Grateful() {
   const [promptResponse, setPromptResponse] = useState("");
   const [isLocked, setIsLocked] = useState(true);
   const [hasSubmittedToday, setHasSubmittedToday] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [errors, setErrors] = useState<Errors>({
     entry1: "",
@@ -54,10 +55,21 @@ export default function Grateful() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchUnlockTime();
-      checkIfUnlocked();
-      checkIfSubmittedToday();
-      generatePrompt();
+      let isActive = true;
+      const runChecks = async () => {
+        setIsLoading(true);
+        await fetchUnlockTime();
+        if (isActive) {
+          checkIfUnlocked();
+          await checkIfSubmittedToday();
+          generatePrompt();
+          setIsLoading(false);
+        }
+      };
+      runChecks();
+      return () => {
+        isActive = false;
+      };
     }, [token, preferredUnlockTime])
   );
 
@@ -205,6 +217,14 @@ export default function Grateful() {
     }
   );
 
+  if (isLoading) {
+    return (
+      <Container style={styles.centered}>
+        <ThemedText style={styles.lockedText}>Loading...</ThemedText>
+      </Container>
+    );
+  }
+
   if (isLocked || hasSubmittedToday) {
     return (
       <Container style={styles.centered}>
@@ -295,6 +315,7 @@ export default function Grateful() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    paddingBottom: 300,
   },
   centered: {
     flex: 1,
@@ -315,7 +336,6 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     transitionDuration: "0.25s",
-    marginBottom: 32,
   },
   errorText: {
     color: "red",
@@ -325,11 +345,9 @@ const styles = StyleSheet.create({
   lockedText: {
     fontSize: 18,
     textAlign: "center",
-    marginTop: 64,
-    marginBottom: 32,
+    paddingBottom: 64,
   },
   unlockButton: {
-    marginTop: 32,
     paddingHorizontal: 20,
     backgroundColor: "#1c1c1c",
     borderWidth: 1,

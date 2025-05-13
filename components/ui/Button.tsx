@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Pressable,
   StyleProp,
+  TouchableOpacity,
   ViewStyle,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
@@ -55,7 +56,7 @@ export function Button({
   };
 
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
       style={[
@@ -92,6 +93,6 @@ export function Button({
           {rightIcon}
         </>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 }

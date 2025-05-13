@@ -12,7 +12,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "white",
+        tabBarActiveTintColor: "#fff",
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarStyle: Platform.select({
@@ -36,8 +36,8 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: () => (
-            <MaterialIcons name="home" color="white" size={28} />
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="home" color={color} size={28} />
           ),
           href: token ? "/(tabs)" : null,
         }}
@@ -46,8 +46,8 @@ export default function TabLayout() {
         name="grateful"
         options={{
           title: "Grateful",
-          tabBarIcon: () => (
-            <MaterialIcons name="create" color="white" size={28} />
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="create" color={color} size={28} />
           ),
           href: token ? "/(tabs)/grateful" : null,
         }}
@@ -56,8 +56,8 @@ export default function TabLayout() {
         name="calendar"
         options={{
           title: "Calendar",
-          tabBarIcon: () => (
-            <MaterialIcons name="calendar-month" color="white" size={28} />
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="calendar-month" color={color} size={28} />
           ),
           href: token ? "/(tabs)/calendar" : null,
         }}
@@ -66,8 +66,8 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: () => (
-            <MaterialIcons name="person" color="white" size={28} />
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="person" color={color} size={28} />
           ),
           href: token ? "/(tabs)/profile" : null,
         }}
@@ -76,8 +76,8 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: "Settings",
-          tabBarIcon: () => (
-            <MaterialIcons name="settings" color="white" size={28} />
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="settings" color={color} size={28} />
           ),
           href: token ? "/(tabs)/settings" : null,
         }}
