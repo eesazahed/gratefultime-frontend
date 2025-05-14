@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 
 type AuthContextType = {
   token: string | null;
@@ -37,7 +38,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     await AsyncStorage.removeItem("JWT_TOKEN");
-    await AsyncStorage.removeItem("hasSentPushToken");
+    await Notifications.cancelAllScheduledNotificationsAsync();
+
     setToken(null);
   };
 

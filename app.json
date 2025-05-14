@@ -26,7 +26,7 @@
     "plugins": [
       "expo-apple-authentication",
       "expo-router",
-      "expo-notifications",
+      ["expo-notifications", { "enableBackgroundRemoteNotifications": true }],
       [
         "expo-splash-screen",
         {

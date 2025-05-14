@@ -7,18 +7,18 @@ import {
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { ThemedText } from "../ThemedText";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface ButtonProps {
   onPress: () => void;
-  title: string;
+  title?: string;
   variant?: "primary" | "secondary" | "outline";
   size?: "small" | "medium" | "large";
-  largeText?: boolean;
   disabled?: boolean;
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  noOpacity?: boolean;
+  icon?: "remove" | "add";
 }
 
 export function Button({
@@ -26,12 +26,11 @@ export function Button({
   title,
   variant = "primary",
   size = "medium",
-  largeText = false,
   disabled = false,
   loading = false,
   style,
-  leftIcon,
-  rightIcon,
+  noOpacity = false,
+  icon,
 }: ButtonProps) {
   const { colors } = useTheme();
 
@@ -58,7 +57,7 @@ export function Button({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.8}
+      activeOpacity={noOpacity ? 1 : 0.5}
       style={[
         {
           backgroundColor: getBackgroundColor(),
@@ -69,29 +68,25 @@ export function Button({
           alignItems: "center",
           justifyContent: "center",
           paddingVertical: getPadding().vertical,
-          // paddingHorizontal: getPadding().horizontal,
-          opacity: disabled ? 0.7 : 1,
+          opacity: disabled || loading ? 0.5 : 1,
         },
         style,
       ]}
     >
       {loading ? (
         <ActivityIndicator color={getTextColor()} />
+      ) : icon ? (
+        <MaterialIcons name={icon} color={getTextColor()} size={24} />
       ) : (
-        <>
-          {leftIcon}
-          <ThemedText
-            style={{
-              color: getTextColor(),
-              fontSize: largeText ? 24 : 16,
-              fontWeight: "600",
-              marginHorizontal: leftIcon || rightIcon ? 8 : 0,
-            }}
-          >
-            {title}
-          </ThemedText>
-          {rightIcon}
-        </>
+        <ThemedText
+          style={{
+            color: getTextColor(),
+            fontSize: 16,
+            fontWeight: "500",
+          }}
+        >
+          {title}
+        </ThemedText>
       )}
     </TouchableOpacity>
   );

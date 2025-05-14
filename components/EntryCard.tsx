@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   closeButtonText: {
-    fontSize: 28,
+    fontSize: 32,
     color: "#bbbbbb",
   },
 });

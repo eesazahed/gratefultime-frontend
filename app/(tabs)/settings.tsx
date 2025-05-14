@@ -1,5 +1,13 @@
 import React, { useState, useCallback } from "react";
-import { StyleSheet, View, Switch, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Text,
+  Linking,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
@@ -9,6 +17,7 @@ import { ThemedText } from "../../components/ThemedText";
 import { Header } from "../../components/ui/Header";
 import { BackendServer } from "@/constants/BackendServer";
 import { useFocusEffect } from "expo-router";
+import { scheduleDailyNotification } from "@/utils/scheduleDailyNotification";
 
 const Settings = () => {
   const router = useRouter();
@@ -25,6 +34,8 @@ const Settings = () => {
     notifsOn?: string;
   }>({});
   const [isDirty, setIsDirty] = useState<boolean>(false);
+  const [saving, setSaving] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -43,6 +54,8 @@ const Settings = () => {
       setError({ unlockTime: "Please enter a valid hour (0-23)." });
       return;
     }
+
+    setSaving(true);
 
     try {
       const response = await fetch(`${BackendServer}/users/settings`, {
@@ -74,9 +87,12 @@ const Settings = () => {
 
       setError({ unlockTime: "", notifsOn: "", submission: "" });
       setIsDirty(false);
+      scheduleDailyNotification(parsedHour);
     } catch (err) {
       console.error("Network error:", err);
       setError({ submission: "Could not connect to server." });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -109,7 +125,7 @@ const Settings = () => {
           onPress: async () => {
             try {
               const response = await fetch(
-                `${BackendServer}/users/delete_account`,
+                `${BackendServer}/users/deleteaccount`,
                 {
                   method: "DELETE",
                   headers: {
@@ -160,81 +176,93 @@ const Settings = () => {
   );
 
   return (
-    <Container>
-      <Header title="Settings" />
+    <ScrollView contentContainerStyle={styles.container}>
+      <Container>
+        <Header title="Settings" />
 
-      <View style={styles.switchContainer}>
-        <ThemedText style={{ ...styles.label, marginTop: 0 }}>
-          Enable Notifications
+        <ThemedText style={styles.label}>
+          Preferred unlock time: {formatHour(selectedHour)}
         </ThemedText>
-        <Switch
-          value={notifsEnabled}
-          onValueChange={setNotifsEnabled}
-          ios_backgroundColor="gray"
-        />
-      </View>
-      {error.notifsOn && (
-        <ThemedText style={styles.errorText}>{error.notifsOn}</ThemedText>
-      )}
 
-      <ThemedText style={styles.label}>
-        Preferred unlock time: {formatHour(selectedHour)}
-      </ThemedText>
-      <View style={styles.hourSelector}>
-        <Button
-          title="-"
-          onPress={handleDecrement}
-          style={styles.adjustButton}
-          largeText
-        />
-        <View style={styles.hourDisplay}>
-          <ThemedText>{selectedHour}</ThemedText>
+        <View style={styles.hourSelector}>
+          <Button
+            icon="remove"
+            onPress={handleDecrement}
+            style={styles.adjustButton}
+          />
+          <View style={styles.hourDisplay}>
+            <ThemedText style={styles.hourDisplayText}>
+              {selectedHour}
+            </ThemedText>
+          </View>
+          <Button
+            icon="add"
+            onPress={handleIncrement}
+            style={styles.adjustButton}
+          />
         </View>
+
         <Button
-          title="+"
-          onPress={handleIncrement}
-          style={styles.adjustButton}
-          largeText
+          title="Open notification settings"
+          style={[styles.settingsButton, { backgroundColor: "#0a84ff" }]}
+          onPress={() => Linking.openSettings()}
         />
-      </View>
 
-      {error.unlockTime && (
-        <ThemedText style={styles.errorText}>{error.unlockTime}</ThemedText>
-      )}
-
-      <View style={styles.buttonGroup}>
-        {error.submission && (
-          <ThemedText style={{ ...styles.errorText, textAlign: "center" }}>
-            {error.submission}
-          </ThemedText>
+        {error.unlockTime && (
+          <ThemedText style={styles.errorText}>{error.unlockTime}</ThemedText>
         )}
 
-        <Button
-          title="Save Settings"
-          onPress={handleSaveSettings}
-          disabled={!isDirty}
-          style={[styles.settingsButton, !isDirty && styles.disabledButton]}
-          loading={loading}
-        />
+        <View style={styles.buttonGroup}>
+          {error.submission && (
+            <ThemedText style={{ ...styles.errorText, textAlign: "center" }}>
+              {error.submission}
+            </ThemedText>
+          )}
 
-        <Button
-          title="Logout"
-          onPress={handleLogout}
-          loading={loading}
-          style={styles.settingsButton}
-        />
+          <Button
+            title="Save Settings"
+            onPress={handleSaveSettings}
+            disabled={!isDirty || saving}
+            loading={saving}
+            style={styles.settingsButton}
+          />
 
-        <Button
-          title="Delete Account"
-          onPress={handleDeleteAccount}
-          style={[styles.settingsButton, { backgroundColor: "darkred" }]}
-        />
-      </View>
-    </Container>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => setShowAdvanced((prev) => !prev)}
+            style={styles.advancedToggle}
+          >
+            <Text style={styles.advancedToggleText}>
+              {showAdvanced ? "Hide account settings" : "Show account settings"}
+            </Text>
+          </TouchableOpacity>
+
+          {showAdvanced && (
+            <View style={styles.advancedSettings}>
+              <Button
+                title="Logout"
+                onPress={handleLogout}
+                loading={loading}
+                style={styles.settingsButton}
+              />
+              <Button
+                title="Delete Account"
+                onPress={handleDeleteAccount}
+                style={[styles.settingsButton, { backgroundColor: "#8c2727" }]}
+              />
+            </View>
+          )}
+        </View>
+      </Container>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    paddingBottom: 100,
+  },
   label: {
     fontSize: 16,
     color: "#8f8f8f",
@@ -248,7 +276,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   adjustButton: {
     width: 50,
@@ -270,6 +298,10 @@ const styles = StyleSheet.create({
     borderColor: "#333",
     marginHorizontal: 20,
     userSelect: "none",
+  },
+  hourDisplayText: {
+    fontSize: 24,
+    lineHeight: 0,
   },
   switchContainer: {
     marginTop: 20,
@@ -294,6 +326,20 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     marginVertical: 40,
+  },
+  advancedToggle: {
+    marginTop: 10,
+    marginBottom: 20,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  advancedToggleText: {
+    color: "#ccc",
+    fontSize: 16,
+    textDecorationLine: "underline",
+  },
+  advancedSettings: {
+    paddingBottom: 10,
   },
 });
 

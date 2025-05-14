@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
 import { useFocusEffect } from "expo-router";
@@ -10,6 +10,7 @@ import { Button } from "../../components/ui/Button";
 import { ThemedText } from "../../components/ThemedText";
 import { Header } from "../../components/ui/Header";
 import { BackendServer } from "@/constants/BackendServer";
+import { PromptList } from "@/constants/PromptList";
 
 type EntryKey =
   | "entry1"
@@ -28,10 +29,10 @@ type Errors = {
 
 export default function Grateful() {
   const { token } = useAuth();
-  const { preferredUnlockTime, loading } = useUser();
+  const { fetchUnlockTime, preferredUnlockTime, loading } = useUser();
 
   const [entries, setEntries] = useState(["", "", ""]);
-  const [aiPrompt, setAiPrompt] = useState("");
+  const [gratefulnessPrompt, setGratefulnessPrompt] = useState("");
   const [promptResponse, setPromptResponse] = useState("");
   const [isLocked, setIsLocked] = useState(true);
   const [hasSubmittedToday, setHasSubmittedToday] = useState(false);
@@ -45,12 +46,6 @@ export default function Grateful() {
     submission: "",
   });
 
-  const mockPromptList = [
-    "What was one small moment that brought you peace today?",
-    "Think of someone you're thankful for — why?",
-    "Describe a challenge today that turned out better than expected.",
-  ];
-
   const DEFAULT_UNLOCK_TIME = 20; // 8pm
 
   useFocusEffect(
@@ -59,6 +54,7 @@ export default function Grateful() {
       const runChecks = async () => {
         setIsLoading(true);
         if (!loading) {
+          fetchUnlockTime();
           checkIfUnlocked();
           await checkIfSubmittedToday();
           generatePrompt();
@@ -120,8 +116,8 @@ export default function Grateful() {
 
   const generatePrompt = () => {
     const randomPrompt =
-      mockPromptList[Math.floor(Math.random() * mockPromptList.length)];
-    setAiPrompt(randomPrompt);
+      PromptList[Math.floor(Math.random() * PromptList.length)];
+    setGratefulnessPrompt(randomPrompt);
     setPromptResponse("");
   };
 
@@ -146,7 +142,7 @@ export default function Grateful() {
           entry1: entries[0],
           entry2: entries[1],
           entry3: entries[2],
-          user_prompt: aiPrompt,
+          user_prompt: gratefulnessPrompt,
           user_prompt_response: promptResponse,
         }),
       });
@@ -219,7 +215,7 @@ export default function Grateful() {
   if (isLoading) {
     return (
       <Container style={styles.centered}>
-        <ThemedText style={styles.lockedText}>Loading...</ThemedText>
+        <ActivityIndicator color="#fff" />
       </Container>
     );
   }
@@ -229,7 +225,7 @@ export default function Grateful() {
       <Container style={styles.centered}>
         <ThemedText style={styles.lockedText}>
           {hasSubmittedToday
-            ? "You've already journaled today \n\n Come back tomorrow!"
+            ? "Thanks for submitting! \n\n Come back tomorrow!"
             : `Your gratitude journal unlocks at ${formattedUnlockTimeString}`}
         </ThemedText>
         {!hasSubmittedToday && (
@@ -267,7 +263,7 @@ export default function Grateful() {
           );
         })}
 
-        <ThemedText style={styles.prompt}>{aiPrompt}</ThemedText>
+        <ThemedText style={styles.prompt}>{gratefulnessPrompt}</ThemedText>
         <TextArea
           maxLength={100}
           placeholder="Write a short reflection..."
