@@ -128,7 +128,6 @@ const Settings = () => {
                 return;
               }
 
-              // If deletion is successful, log out and redirect
               await logout();
               router.push("/");
             } catch (err) {

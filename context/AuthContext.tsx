@@ -37,6 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     await AsyncStorage.removeItem("JWT_TOKEN");
+    await AsyncStorage.removeItem("hasSentPushToken");
     setToken(null);
   };
 

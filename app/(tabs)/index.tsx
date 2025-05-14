@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { Container } from "../../components/ui/Container";
@@ -11,9 +11,20 @@ import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackendServer } from "@/constants/BackendServer";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true, // look into this
+  }),
+});
+
 const getExpoPushToken = async (userAuthToken: string | null) => {
   if (Device.isDevice && userAuthToken) {
     const { status } = await Notifications.requestPermissionsAsync();
+
     if (status !== "granted") return;
 
     try {
