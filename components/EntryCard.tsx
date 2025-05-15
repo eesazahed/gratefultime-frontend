@@ -1,11 +1,21 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
+
+import type { Entry } from "@/types";
 
 type EntryCardProps = {
-  entry: any;
+  entry: Entry;
   showDelete?: boolean;
   onDelete: () => void;
 };
+
+let deviceWidth = Dimensions.get("window").width;
 
 const EntryCard = ({ entry, showDelete = false, onDelete }: EntryCardProps) => {
   return (
@@ -28,7 +38,6 @@ const EntryCard = ({ entry, showDelete = false, onDelete }: EntryCardProps) => {
           </TouchableOpacity>
         )}
       </View>
-
       <Text style={styles.gratitudeTitle}>Grateful for:</Text>
       <View style={styles.gratitudeList}>
         <Text style={styles.entryText}>
@@ -41,7 +50,6 @@ const EntryCard = ({ entry, showDelete = false, onDelete }: EntryCardProps) => {
           <Text style={styles.gray}>3.</Text> {entry.entry3}
         </Text>
       </View>
-
       <Text style={styles.gratitudeTitle}>"{entry.user_prompt}"</Text>
       <Text style={styles.responseText}>{entry.user_prompt_response}</Text>
     </View>
@@ -50,6 +58,7 @@ const EntryCard = ({ entry, showDelete = false, onDelete }: EntryCardProps) => {
 
 const styles = StyleSheet.create({
   entryContainer: {
+    width: deviceWidth - 80,
     backgroundColor: "#121212",
     borderRadius: 20,
     paddingHorizontal: 20,

@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Modal, Animated } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  Modal,
+  Animated,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import EntryCard from "./EntryCard";
+
+import type { Entry } from "@/types";
 
 type EntryDetailsModalProps = {
   visible: boolean;
-  entryDetails: any;
+  entryDetails?: Entry;
   onClose: () => void;
 };
 
@@ -71,38 +80,36 @@ const EntryDetailsModal = ({
 
   return (
     <Modal visible={visible} animationType="none" transparent={true}>
-      <Animated.View style={[styles.overlay, { opacity: overlayAnim }]}>
-        <Animated.View
-          style={[
-            styles.modalContainer,
-            {
-              transform: [
+      <TouchableWithoutFeedback onPress={handleClose}>
+        <Animated.View style={[styles.overlay, { opacity: overlayAnim }]}>
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <Animated.View
+              style={[
+                styles.modalContainer,
                 {
-                  translateY: modalAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [500, 0],
-                  }),
+                  transform: [
+                    {
+                      translateY: modalAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [500, 0],
+                      }),
+                    },
+                  ],
                 },
-              ],
-            },
-          ]}
-        >
-          {entryDetails?.length === 0 ? (
-            <Text style={styles.noDataText}>
-              No details available for this entry.
-            </Text>
-          ) : (
-            entryDetails?.map((entry: any) => (
-              <EntryCard
-                key={entry.id}
-                entry={entry}
-                showDelete
-                onDelete={handleClose}
-              />
-            ))
-          )}
+              ]}
+            >
+              {entryDetails && (
+                <EntryCard
+                  key={entryDetails.id}
+                  entry={entryDetails}
+                  showDelete
+                  onDelete={handleClose}
+                />
+              )}
+            </Animated.View>
+          </TouchableWithoutFeedback>
         </Animated.View>
-      </Animated.View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

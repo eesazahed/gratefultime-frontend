@@ -10,13 +10,16 @@ const Calendar = () => {
   const { token } = useAuth();
   const [entries, setEntries] = useState<{ [localTime: string]: string }>({});
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+  const [loading, setLoading] = useState<boolean>(true);
 
   useFocusEffect(
     useCallback(() => {
       const fetchEntries = async () => {
+        setLoading(true);
         try {
           if (!token) {
             console.error("JWT token not found");
+            setLoading(false);
             return;
           }
 
@@ -26,10 +29,12 @@ const Calendar = () => {
               Authorization: `Bearer ${token}`,
             },
           });
+
           const data = await response.json();
 
           if (!response.ok) {
             console.error("Error fetching entries:", data);
+            setLoading(false);
             return;
           }
 
@@ -45,6 +50,8 @@ const Calendar = () => {
           setEntries(entryMap);
         } catch (error) {
           console.error("Error fetching entries:", error);
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -58,6 +65,7 @@ const Calendar = () => {
         entries={entries}
         currentMonth={currentMonth}
         setCurrentMonth={setCurrentMonth}
+        loading={loading}
       />
     </Container>
   );

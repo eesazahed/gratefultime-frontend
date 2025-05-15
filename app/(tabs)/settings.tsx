@@ -22,16 +22,15 @@ import { scheduleDailyNotification } from "@/utils/scheduleDailyNotification";
 const Settings = () => {
   const router = useRouter();
   const { token, logout } = useAuth();
-  const { preferredUnlockTime, notifsOn, loading } = useUser();
+  const { fetchUnlockTime, preferredUnlockTime, loading } = useUser();
 
   const [selectedHour, setSelectedHour] = useState<string>(
     preferredUnlockTime?.toString() || ""
   );
-  const [notifsEnabled, setNotifsEnabled] = useState<boolean>(notifsOn);
+
   const [error, setError] = useState<{
     unlockTime?: string;
     submission?: string;
-    notifsOn?: string;
   }>({});
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const [saving, setSaving] = useState(false);
@@ -66,18 +65,15 @@ const Settings = () => {
         },
         body: JSON.stringify({
           preferred_unlock_time: parsedHour,
-          notifs_on: notifsEnabled,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        const newErrors = { unlockTime: "", notifsOn: "", submission: "" };
+        const newErrors = { unlockTime: "", submission: "" };
         if (data.errorCode === "unlockTime") {
           newErrors.unlockTime = data.message;
-        } else if (data.errorCode === "notifsOn") {
-          newErrors.notifsOn = data.message;
         } else {
           newErrors.submission = data.message || "Error saving settings.";
         }
@@ -85,7 +81,7 @@ const Settings = () => {
         return;
       }
 
-      setError({ unlockTime: "", notifsOn: "", submission: "" });
+      setError({ unlockTime: "", submission: "" });
       setIsDirty(false);
       scheduleDailyNotification(parsedHour);
     } catch (err) {
@@ -159,20 +155,18 @@ const Settings = () => {
 
   useFocusEffect(
     useCallback(() => {
+      fetchUnlockTime();
       if (preferredUnlockTime !== null) {
         setSelectedHour(preferredUnlockTime.toString());
-        setNotifsEnabled(notifsOn);
       }
-    }, [preferredUnlockTime, notifsOn])
+    }, [preferredUnlockTime])
   );
 
   useFocusEffect(
     useCallback(() => {
-      const hasChanges =
-        selectedHour !== preferredUnlockTime?.toString() ||
-        notifsEnabled !== notifsOn;
+      const hasChanges = selectedHour !== preferredUnlockTime?.toString();
       setIsDirty(hasChanges);
-    }, [selectedHour, notifsEnabled, preferredUnlockTime, notifsOn])
+    }, [selectedHour, preferredUnlockTime])
   );
 
   return (
@@ -204,7 +198,7 @@ const Settings = () => {
 
         <Button
           title="Open notification settings"
-          style={[styles.settingsButton, { backgroundColor: "#0a84ff" }]}
+          style={styles.settingsButton}
           onPress={() => Linking.openSettings()}
         />
 
@@ -218,12 +212,12 @@ const Settings = () => {
               {error.submission}
             </ThemedText>
           )}
-
           <Button
             title="Save Settings"
             onPress={handleSaveSettings}
             disabled={!isDirty || saving}
             loading={saving}
+            noLoading
             style={styles.settingsButton}
           />
 
@@ -236,7 +230,6 @@ const Settings = () => {
               {showAdvanced ? "Hide account settings" : "Show account settings"}
             </Text>
           </TouchableOpacity>
-
           {showAdvanced && (
             <View style={styles.advancedSettings}>
               <Button

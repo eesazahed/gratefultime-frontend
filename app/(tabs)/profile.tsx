@@ -14,16 +14,7 @@ import { Header } from "../../components/ui/Header";
 import { BackendServer } from "@/constants/BackendServer";
 import EntryCard from "../../components/EntryCard";
 
-type Entry = {
-  id: number;
-  user_id: number;
-  entry1: string;
-  entry2: string;
-  entry3: string;
-  user_prompt: string;
-  user_prompt_response: string;
-  timestamp: string;
-};
+import type { Entry } from "@/types";
 
 const PAGE_SIZE = 1;
 
@@ -124,19 +115,13 @@ const Profile = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <Container style={styles.loadingContainer}>
-        <ActivityIndicator size="large" />
-      </Container>
-    );
-  }
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
         <Header title="Your Past Entries" />
-        {!entries || entries.length === 0 ? (
+        {loading ? (
+          <ActivityIndicator size="large" style={styles.loadingContainer} />
+        ) : !entries || entries.length === 0 ? (
           <ThemedText style={styles.noDataText}>
             You haven't written anything yet.
           </ThemedText>
@@ -172,6 +157,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   loadingContainer: {
+    marginTop: 64,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

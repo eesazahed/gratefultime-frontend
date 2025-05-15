@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import MonthNavigation from "./MonthNavigation";
 import WeekHeader from "./WeekHeader";
 import DayGrid from "./DayGrid";
@@ -8,18 +8,24 @@ import { useAuth } from "../context/AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
 import { Header } from "./ui/Header";
 
+import type { Entry } from "@/types";
+
 const CalendarGrid = ({
   entries,
   currentMonth,
   setCurrentMonth,
+  loading,
 }: {
   entries: { [localTime: string]: string };
   currentMonth: Date;
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+  loading: boolean;
 }) => {
   const { token } = useAuth();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [entryDetails, setEntryDetails] = useState<any>(null);
+  const [entryDetails, setEntryDetails] = useState<Entry | undefined>(
+    undefined
+  );
 
   const minDate = new Date(2025, 1, 1);
   const today = new Date();
@@ -119,14 +125,19 @@ const CalendarGrid = ({
       />
       <WeekHeader />
       <View style={styles.calendarAndButtons}>
-        <DayGrid
-          days={days}
-          startDay={startDay}
-          entries={entries}
-          today={today}
-          currentMonth={currentMonth}
-          handleDayPress={handleDayPress}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" style={{ margin: "auto" }} />
+        ) : (
+          <DayGrid
+            days={days}
+            startDay={startDay}
+            entries={entries}
+            today={today}
+            currentMonth={currentMonth}
+            handleDayPress={handleDayPress}
+          />
+        )}
+
         <MonthNavigation
           handlePreviousMonth={handlePreviousMonth}
           handleNextMonth={handleNextMonth}

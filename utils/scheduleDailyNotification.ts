@@ -11,7 +11,7 @@ export const scheduleDailyNotification = async (hour: number) => {
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
       hour,
-      minute: 24,
+      minute: 0,
     },
   });
 };

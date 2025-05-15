@@ -17,7 +17,7 @@ interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
-  noOpacity?: boolean;
+  noLoading?: boolean;
   icon?: "remove" | "add";
 }
 
@@ -29,7 +29,7 @@ export function Button({
   disabled = false,
   loading = false,
   style,
-  noOpacity = false,
+  noLoading = false,
   icon,
 }: ButtonProps) {
   const { colors } = useTheme();
@@ -57,7 +57,7 @@ export function Button({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={noOpacity ? 1 : 0.5}
+      activeOpacity={0.5}
       style={[
         {
           backgroundColor: getBackgroundColor(),
@@ -73,7 +73,7 @@ export function Button({
         style,
       ]}
     >
-      {loading ? (
+      {!noLoading && loading ? (
         <ActivityIndicator color={getTextColor()} />
       ) : icon ? (
         <MaterialIcons name={icon} color={getTextColor()} size={24} />
