@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import MonthNavigation from "./MonthNavigation";
 import WeekHeader from "./WeekHeader";
 import DayGrid from "./DayGrid";
@@ -9,6 +9,7 @@ import { BackendServer } from "@/constants/BackendServer";
 import { Header } from "./ui/Header";
 
 import type { Entry } from "@/types";
+import { useRouter } from "expo-router";
 
 const CalendarGrid = ({
   entries,
@@ -22,6 +23,8 @@ const CalendarGrid = ({
   loading: boolean;
 }) => {
   const { token } = useAuth();
+  const router = useRouter();
+
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [entryDetails, setEntryDetails] = useState<Entry | undefined>(
     undefined
@@ -72,17 +75,26 @@ const CalendarGrid = ({
   };
 
   const handleDayPress = async (day: number) => {
+    const pressedDate = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      day
+    );
+    pressedDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const localDate = formatDate(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
       day
     );
-
     const dbTimestamp = entries[localDate];
-    if (!dbTimestamp) return;
 
-    if (!token) {
-      console.error("No JWT token found");
+    if (!dbTimestamp) {
+      if (pressedDate.getTime() === today.getTime()) {
+        router.push("/(tabs)/grateful");
+      }
       return;
     }
 
@@ -157,7 +169,7 @@ const CalendarGrid = ({
 const styles = StyleSheet.create({
   calendarAndButtons: {
     justifyContent: "space-between",
-    height: 400,
+    height: 380,
   },
 });
 

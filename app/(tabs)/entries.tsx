@@ -18,7 +18,7 @@ import type { Entry } from "@/types";
 
 const PAGE_SIZE = 1;
 
-const Profile = () => {
+const Entries = () => {
   const { token } = useAuth();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -154,7 +154,7 @@ const Profile = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    paddingBottom: 100,
   },
   loadingContainer: {
     marginTop: 64,
@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#1c1c1c",
     borderWidth: 1,
     borderColor: "#333",
-    marginVertical: 20,
+    marginVertical: 40,
   },
 });
 
-export default Profile;
+export default Entries;

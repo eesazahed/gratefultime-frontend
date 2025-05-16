@@ -22,7 +22,7 @@ import { scheduleDailyNotification } from "@/utils/scheduleDailyNotification";
 const Settings = () => {
   const router = useRouter();
   const { token, logout } = useAuth();
-  const { fetchUnlockTime, preferredUnlockTime, loading } = useUser();
+  const { fetchUserData, preferredUnlockTime, loading } = useUser();
 
   const [selectedHour, setSelectedHour] = useState<string>(
     preferredUnlockTime?.toString() || ""
@@ -155,7 +155,7 @@ const Settings = () => {
 
   useFocusEffect(
     useCallback(() => {
-      fetchUnlockTime();
+      fetchUserData();
       if (preferredUnlockTime !== null) {
         setSelectedHour(preferredUnlockTime.toString());
       }

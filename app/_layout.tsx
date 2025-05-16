@@ -9,6 +9,7 @@ import "react-native-reanimated";
 
 import { AuthProvider } from "../context/AuthContext";
 import { UserProvider } from "@/context/UserContext";
+import { MonthlyCountProvider } from "@/context/MonthlyCountProvider";
 
 SplashScreen.preventAutoHideAsync();
 Notifications.setNotificationHandler({
@@ -36,16 +37,20 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={DarkTheme}>
-      <AuthProvider>
-        <UserProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </UserProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <>
+      <ThemeProvider value={DarkTheme}>
+        <AuthProvider>
+          <UserProvider>
+            <MonthlyCountProvider>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </MonthlyCountProvider>
+          </UserProvider>
+        </AuthProvider>
+      </ThemeProvider>
+      <StatusBar style="light" />
+    </>
   );
 }

@@ -29,7 +29,7 @@ type Errors = {
 
 export default function Grateful() {
   const { token } = useAuth();
-  const { fetchUnlockTime, preferredUnlockTime, loading } = useUser();
+  const { fetchUserData, preferredUnlockTime, loading } = useUser();
 
   const [entries, setEntries] = useState(["", "", ""]);
   const [gratefulnessPrompt, setGratefulnessPrompt] = useState("");
@@ -50,11 +50,10 @@ export default function Grateful() {
 
   useFocusEffect(
     useCallback(() => {
-      let isActive = true;
       const runChecks = async () => {
         setIsLoading(true);
         if (!loading) {
-          fetchUnlockTime();
+          fetchUserData();
           checkIfUnlocked();
           await checkIfSubmittedToday();
           generatePrompt();
@@ -62,9 +61,6 @@ export default function Grateful() {
         }
       };
       runChecks();
-      return () => {
-        isActive = false;
-      };
     }, [token, preferredUnlockTime, loading])
   );
 

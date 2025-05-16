@@ -43,7 +43,7 @@ const DayCell = ({
       onPress={onPress}
     >
       <View style={[styles.day, getDayStyle()]}>
-        <Text style={getTextStyle()}>{day}</Text>
+        <Text style={[getTextStyle(), { fontSize: 18 }]}>{day}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -54,20 +54,16 @@ const styles = StyleSheet.create({
     flexBasis: "14%",
     alignItems: "center",
     justifyContent: "center",
-    padding: 4,
+    padding: 3,
   },
   day: {
     width: "100%",
-    height: 40,
-    borderRadius: 20,
+    height: "100%",
+    borderRadius: "100%",
     alignItems: "center",
     justifyContent: "center",
-    margin: 4,
   },
-  dayText: {
-    fontSize: 16,
-    color: "#fff",
-  },
+  dayText: { color: "#fff" },
   hasEntry: {
     backgroundColor: "#32a852",
   },
@@ -78,7 +74,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#222",
   },
   disabledDayText: {
-    fontSize: 16,
     color: "#666",
   },
 });

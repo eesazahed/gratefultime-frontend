@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    height: 50,
   },
   emptyDayCell: {
     width: "14%",
-    height: 40,
   },
 });
 

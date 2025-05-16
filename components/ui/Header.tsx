@@ -13,7 +13,7 @@ export function Header({ title, style }: HeaderProps) {
         {
           marginHorizontal: "auto",
           marginTop: 64,
-          marginBottom: 18,
+          marginBottom: 32,
         },
         style,
       ]}

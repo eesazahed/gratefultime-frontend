@@ -49,7 +49,7 @@ const AppleSignInPage = () => {
   return (
     <View style={styles.container}>
       <AppleAuthentication.AppleAuthenticationButton
-        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+        buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
         buttonStyle={
           AppleAuthentication.AppleAuthenticationButtonStyle.WHITE_OUTLINE
         }

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "nowrap",
     width: "100%",
-    marginVertical: 10,
+    marginVertical: 15,
     justifyContent: "space-evenly",
   },
   weekDayWrapper: {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   weekDay: {
     width: "100%",
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: "500",
     textAlign: "center",
     color: "#fff",

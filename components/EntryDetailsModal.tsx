@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.8)",
   },
   modalContainer: {
-    marginHorizontal: 20,
+    width: "100%",
+    paddingHorizontal: 30,
   },
   noDataText: {
     fontSize: 16,

@@ -9,9 +9,9 @@ import { useAuth } from "./AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
 
 interface UserContextType {
-  preferredUnlockTime: number | null;
   loading: boolean;
-  fetchUnlockTime: () => void;
+  preferredUnlockTime: number | null;
+  fetchUserData: () => void;
 }
 
 interface UserProviderProps {
@@ -36,7 +36,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchUnlockTime = async () => {
+  const fetchUserData = async () => {
     try {
       const response = await fetch(`${BackendServer}/users/info`, {
         method: "GET",
@@ -51,6 +51,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       }
 
       const data = await response.json();
+
       setPreferredUnlockTime(data.data.preferred_unlock_time);
     } catch (error) {
       console.error("Error fetching unlock time:", error);
@@ -61,17 +62,16 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   useEffect(() => {
     if (token) {
-      fetchUnlockTime();
+      fetchUserData();
     }
   }, [token]);
 
   return (
     <UserContext.Provider
       value={{
-        preferredUnlockTime,
-
         loading,
-        fetchUnlockTime,
+        preferredUnlockTime,
+        fetchUserData,
       }}
     >
       {children}

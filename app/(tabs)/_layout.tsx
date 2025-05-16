@@ -63,13 +63,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="entries"
         options={{
-          title: "Profile",
+          title: "Entries",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="person" color={color} size={28} />
+            <MaterialIcons name="library-books" color={color} size={28} />
           ),
-          href: token ? "/(tabs)/profile" : null,
+          href: token ? "/(tabs)/entries" : null,
         }}
       />
       <Tabs.Screen

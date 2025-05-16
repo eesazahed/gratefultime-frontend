@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 import type { Entry } from "@/types";
 
@@ -14,8 +8,6 @@ type EntryCardProps = {
   showDelete?: boolean;
   onDelete: () => void;
 };
-
-let deviceWidth = Dimensions.get("window").width;
 
 const EntryCard = ({ entry, showDelete = false, onDelete }: EntryCardProps) => {
   return (
@@ -58,7 +50,7 @@ const EntryCard = ({ entry, showDelete = false, onDelete }: EntryCardProps) => {
 
 const styles = StyleSheet.create({
   entryContainer: {
-    width: deviceWidth - 80,
+    marginVertical: 20,
     backgroundColor: "#121212",
     borderRadius: 20,
     paddingHorizontal: 20,
