@@ -82,6 +82,12 @@ export default function TabLayout() {
           href: token ? "/(tabs)/settings" : null,
         }}
       />
+      <Tabs.Screen
+        name="monthlysummary"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

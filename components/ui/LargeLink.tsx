@@ -37,6 +37,7 @@ export function LargeLink({
       activeOpacity={0.5}
       style={[
         {
+          marginVertical: 15,
           backgroundColor: "#1c1c1c",
           borderWidth: 2,
           borderColor: "#323232",
