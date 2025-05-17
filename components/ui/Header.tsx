@@ -4,9 +4,10 @@ import { ThemedText } from "../ThemedText";
 interface HeaderProps {
   title: string;
   style?: StyleProp<ViewStyle>;
+  fontSize?: number;
 }
 
-export function Header({ title, style }: HeaderProps) {
+export function Header({ title, style, fontSize = 28 }: HeaderProps) {
   return (
     <View
       style={[
@@ -21,7 +22,7 @@ export function Header({ title, style }: HeaderProps) {
       <ThemedText
         style={{
           paddingVertical: 28,
-          fontSize: 28,
+          fontSize: fontSize,
           fontWeight: 600,
           flex: 1,
           color: "#fff",

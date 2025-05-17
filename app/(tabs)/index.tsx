@@ -10,7 +10,6 @@ import * as Notifications from "expo-notifications";
 import { useUser } from "@/context/UserContext";
 import { LargeLink } from "@/components/ui/LargeLink";
 import { Header } from "@/components/ui/Header";
-import greeting from "@/utils/greeting";
 import { useMonthlyCount } from "@/context/MonthlyCountProvider";
 import { ThemedText } from "@/components/ThemedText";
 
@@ -68,9 +67,13 @@ const Home = () => {
 
   return (
     <Container>
-      <Header title={greeting()} />
-      <ThemedText style={{ fontSize: 20, marginVertical: 10 }}>
-        Your progress this month
+      <Header
+        title="GratefulTime"
+        fontSize={34}
+        style={{ marginTop: 80, marginBottom: 40 }}
+      />
+      <ThemedText style={{ fontSize: 24, marginVertical: 10 }}>
+        Your progress this month:
       </ThemedText>
       <LargeLink
         title="This month:"
@@ -78,6 +81,10 @@ const Home = () => {
         loading={loadingData}
         onPress={() => router.push("/(tabs)/calendar")}
       />
+      <View style={{ marginVertical: 10 }} />
+      <ThemedText style={{ fontSize: 24, marginVertical: 10 }}>
+        Recap your previous entries:
+      </ThemedText>
       <LargeLink
         title="AI Summary"
         onPress={() => router.push("/(tabs)/monthlysummary")}

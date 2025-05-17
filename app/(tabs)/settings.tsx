@@ -258,6 +258,7 @@ const Settings = () => {
                   placeholderStyle={styles.placeholderStyle}
                   selectedTextStyle={styles.selectedTextStyle}
                   activeColor="#323232"
+                  autoScroll={false}
                 />
               </View>
               <Button
