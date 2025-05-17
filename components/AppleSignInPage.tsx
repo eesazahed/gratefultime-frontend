@@ -18,6 +18,8 @@ const AppleSignInPage = () => {
         ],
       });
 
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
       const response = await fetch(`${BackendServer}/auth/applelogin`, {
         method: "POST",
         headers: {
@@ -29,6 +31,7 @@ const AppleSignInPage = () => {
           user: credential.user,
           email: credential.email?.trim().toLowerCase(),
           fullName: credential.fullName,
+          user_timezone: userTimezone,
         }),
       });
 

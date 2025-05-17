@@ -12,6 +12,7 @@ import { LargeLink } from "@/components/ui/LargeLink";
 import { Header } from "@/components/ui/Header";
 import greeting from "@/utils/greeting";
 import { useMonthlyCount } from "@/context/MonthlyCountProvider";
+import { ThemedText } from "@/components/ThemedText";
 
 const Home = () => {
   const { token } = useAuth();
@@ -51,9 +52,9 @@ const Home = () => {
     }, [
       token,
       preferredUnlockTime,
-      fetchUserData,
+      // fetchUserData,
       monthlyCount,
-      fetchLast31Entries,
+      // fetchLast31Entries,
     ])
   );
 
@@ -70,6 +71,7 @@ const Home = () => {
   return (
     <Container>
       <Header title={greeting()} />
+      <ThemedText>Your progress this month</ThemedText>
       <LargeLink
         title="This month:"
         data={String(monthlyCountData)}

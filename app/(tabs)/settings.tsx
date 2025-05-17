@@ -18,44 +18,52 @@ import { Header } from "../../components/ui/Header";
 import { BackendServer } from "@/constants/BackendServer";
 import { useFocusEffect } from "expo-router";
 import { scheduleDailyNotification } from "@/utils/scheduleDailyNotification";
+import { Dropdown } from "react-native-element-dropdown";
+import { timezones } from "../../constants/timezones";
 
 const Settings = () => {
   const router = useRouter();
   const { token, logout } = useAuth();
-  const { fetchUserData, preferredUnlockTime, loading } = useUser();
+  const { fetchUserData, preferredUnlockTime, loading, userTimezone } =
+    useUser();
 
   const [selectedHour, setSelectedHour] = useState<string>(
     preferredUnlockTime?.toString() || ""
+  );
+  const [selectedTimezone, setSelectedTimezone] = useState<string>(
+    Intl.DateTimeFormat().resolvedOptions().timeZone
   );
 
   const [error, setError] = useState<{
     unlockTime?: string;
     submission?: string;
   }>({});
-  const [isDirty, setIsDirty] = useState<boolean>(false);
+  const [isDirty, setIsDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const timezoneOptions = timezones.map((tz) => ({
+    label: tz,
+    value: tz,
+  }));
 
   const handleLogout = async () => {
     try {
       await logout();
       router.push("/");
-    } catch (err) {
-      console.error("Logout error:", err);
+    } catch {
       setError({ submission: "Error logging out. Please try again." });
     }
   };
 
   const handleSaveSettings = async () => {
     const parsedHour = parseInt(selectedHour, 10);
-
     if (isNaN(parsedHour) || parsedHour < 0 || parsedHour > 23) {
-      setError({ unlockTime: "Please enter a valid hour (0-23)." });
+      setError({ unlockTime: "Please enter a valid hour (0-23)" });
       return;
     }
 
     setSaving(true);
-
     try {
       const response = await fetch(`${BackendServer}/users/settings`, {
         method: "POST",
@@ -65,45 +73,25 @@ const Settings = () => {
         },
         body: JSON.stringify({
           preferred_unlock_time: parsedHour,
+          timezone: selectedTimezone,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        const newErrors = { unlockTime: "", submission: "" };
-        if (data.errorCode === "unlockTime") {
-          newErrors.unlockTime = data.message;
-        } else {
-          newErrors.submission = data.message || "Error saving settings.";
-        }
-        setError(newErrors);
+        setError({ submission: data.message || "Error saving settings." });
         return;
       }
 
-      setError({ unlockTime: "", submission: "" });
       setIsDirty(false);
+      setError({});
       scheduleDailyNotification(parsedHour);
-    } catch (err) {
-      console.error("Network error:", err);
+    } catch {
       setError({ submission: "Could not connect to server." });
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleDecrement = () =>
-    setSelectedHour(((parseInt(selectedHour) + 23) % 24).toString());
-
-  const handleIncrement = () =>
-    setSelectedHour(((parseInt(selectedHour) + 1) % 24).toString());
-
-  const formatHour = (hourString: string) => {
-    const hour = parseInt(hourString, 10);
-    if (isNaN(hour)) return "";
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-    return `${hour12}:00 ${ampm}`;
   };
 
   const handleDeleteAccount = () => {
@@ -111,10 +99,7 @@ const Settings = () => {
       "Confirm Deletion",
       "All of your entries will be permanently deleted. Are you sure?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
           style: "destructive",
@@ -142,8 +127,7 @@ const Settings = () => {
 
               await logout();
               router.push("/");
-            } catch (err) {
-              console.error("Network error:", err);
+            } catch {
               setError({ submission: "Could not connect to server." });
             }
           },
@@ -156,18 +140,34 @@ const Settings = () => {
   useFocusEffect(
     useCallback(() => {
       fetchUserData();
-      if (preferredUnlockTime !== null) {
+      if (preferredUnlockTime !== null)
         setSelectedHour(preferredUnlockTime.toString());
-      }
-    }, [preferredUnlockTime])
+      if (userTimezone) setSelectedTimezone(userTimezone);
+    }, [preferredUnlockTime, userTimezone])
   );
 
   useFocusEffect(
     useCallback(() => {
-      const hasChanges = selectedHour !== preferredUnlockTime?.toString();
+      const hasChanges =
+        selectedHour !== preferredUnlockTime?.toString() ||
+        selectedTimezone !== userTimezone;
       setIsDirty(hasChanges);
-    }, [selectedHour, preferredUnlockTime])
+    }, [selectedHour, selectedTimezone, preferredUnlockTime, userTimezone])
   );
+
+  const handleDecrement = () =>
+    setSelectedHour(((parseInt(selectedHour) + 23) % 24).toString());
+
+  const handleIncrement = () =>
+    setSelectedHour(((parseInt(selectedHour) + 1) % 24).toString());
+
+  const formatHour = (hourString: string) => {
+    const hour = parseInt(hourString, 10);
+    if (isNaN(hour)) return "";
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+    return `${hour12}:00 ${ampm}`;
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -196,15 +196,32 @@ const Settings = () => {
           />
         </View>
 
+        {error.unlockTime && (
+          <ThemedText style={styles.errorText}>{error.unlockTime}</ThemedText>
+        )}
+
+        <ThemedText style={styles.label}>Timezone</ThemedText>
+        <Dropdown
+          data={timezoneOptions}
+          labelField="label"
+          valueField="value"
+          value={selectedTimezone}
+          onChange={(item) => {
+            setSelectedTimezone(item.value);
+          }}
+          placeholder="Select timezone"
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+        />
+
         <Button
           title="Open notification settings"
           style={styles.settingsButton}
           onPress={() => Linking.openSettings()}
         />
-
-        {error.unlockTime && (
-          <ThemedText style={styles.errorText}>{error.unlockTime}</ThemedText>
-        )}
 
         <View style={styles.buttonGroup}>
           {error.submission && (
@@ -230,6 +247,7 @@ const Settings = () => {
               {showAdvanced ? "Hide account settings" : "Show account settings"}
             </Text>
           </TouchableOpacity>
+
           {showAdvanced && (
             <View style={styles.advancedSettings}>
               <Button
@@ -252,10 +270,7 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    paddingBottom: 100,
-  },
+  container: { flexGrow: 1, paddingBottom: 100 },
   label: {
     fontSize: 16,
     color: "#8f8f8f",
@@ -264,7 +279,6 @@ const styles = StyleSheet.create({
   },
   hourSelector: {
     width: "100%",
-    marginHorizontal: "auto",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -277,12 +291,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#323232",
-    userSelect: "none",
   },
   hourDisplay: {
     height: 50,
-    borderRadius: 8,
-    display: "flex",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -290,36 +301,29 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#333",
     marginHorizontal: 20,
-    userSelect: "none",
   },
-  hourDisplayText: {
-    fontSize: 24,
-    lineHeight: 0,
+  hourDisplayText: { fontSize: 24 },
+  selectInput: {
+    height: 50,
+    backgroundColor: "#1c1c1c",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#333",
+    paddingHorizontal: 12,
+    marginBottom: 20,
   },
-  switchContainer: {
-    marginTop: 20,
-    marginBottom: 5,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  selectInputLabel: {
+    color: "#fff",
+    fontSize: 16,
+    lineHeight: 48,
   },
   settingsButton: {
     backgroundColor: "#323232",
     marginTop: 5,
     marginBottom: 20,
-    transitionDuration: "0.25s",
   },
-  disabledButton: {
-    opacity: 0.5,
-  },
-  errorText: {
-    color: "red",
-    fontSize: 14,
-    marginBottom: 14,
-  },
-  buttonGroup: {
-    marginVertical: 40,
-  },
+  errorText: { color: "red", fontSize: 14, marginBottom: 14 },
+  buttonGroup: { marginVertical: 40 },
   advancedToggle: {
     marginTop: 10,
     marginBottom: 20,
@@ -333,6 +337,35 @@ const styles = StyleSheet.create({
   },
   advancedSettings: {
     paddingBottom: 10,
+  },
+  dropdown: {
+    backgroundColor: "#323232",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  placeholderStyle: {
+    color: "#aaa",
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+    color: "#fff",
+    backgroundColor: "#1c1c1c",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+    tintColor: "#fff",
   },
 });
 

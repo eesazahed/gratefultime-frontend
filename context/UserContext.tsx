@@ -11,6 +11,7 @@ import { BackendServer } from "@/constants/BackendServer";
 interface UserContextType {
   loading: boolean;
   preferredUnlockTime: number | null;
+  userTimezone: string | null;
   fetchUserData: () => void;
 }
 
@@ -33,6 +34,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const [preferredUnlockTime, setPreferredUnlockTime] = useState<number | null>(
     null
   );
+  const [userTimezone, setUserTimezone] = useState<string | null>(null);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -53,6 +55,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       const data = await response.json();
 
       setPreferredUnlockTime(data.data.preferred_unlock_time);
+      setUserTimezone(data.data.user_timezone);
     } catch (error) {
       console.error("Error fetching unlock time:", error);
     } finally {
@@ -71,6 +74,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       value={{
         loading,
         preferredUnlockTime,
+        userTimezone,
         fetchUserData,
       }}
     >
