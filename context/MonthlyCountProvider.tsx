@@ -4,14 +4,13 @@ import React, {
   useState,
   useEffect,
   ReactNode,
-  useMemo,
 } from "react";
 import { useAuth } from "./AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
 
 interface MonthlyCountContextType {
   loading: boolean;
-  fetchLast31Entries: () => void;
+  fetchMonthlyCount: () => void;
   monthlyCount: number;
 }
 
@@ -37,13 +36,13 @@ export const MonthlyCountProvider = ({
   children,
 }: MonthlyCountProviderProps) => {
   const { token } = useAuth();
-  const [entries, setEntries] = useState<string[]>([]);
+  const [monthlyCount, setMonthlyCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchLast31Entries = async () => {
+  const fetchMonthlyCount = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${BackendServer}/entries/last31`, {
+      const response = await fetch(`${BackendServer}/entries/user_month_days`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,42 +51,22 @@ export const MonthlyCountProvider = ({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch last 31 entries");
+        throw new Error("Failed to fetch monthly count");
       }
 
       const data = await response.json();
-      setEntries(data.data);
+      setMonthlyCount(data.days_count ?? 0);
     } catch (error) {
-      console.error("Error fetching last 31 entries:", error);
-      setEntries([]);
+      console.error("Error fetching monthly count:", error);
+      setMonthlyCount(0);
     } finally {
       setLoading(false);
     }
   };
 
-  const monthlyCount = useMemo(() => {
-    if (!entries.length) return 0;
-
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth();
-
-    let count = 0;
-    for (const utcTimestamp of entries) {
-      const localDate = new Date(utcTimestamp);
-      if (
-        localDate.getFullYear() === currentYear &&
-        localDate.getMonth() === currentMonth
-      ) {
-        count++;
-      }
-    }
-    return count;
-  }, [entries]);
-
   useEffect(() => {
     if (token) {
-      fetchLast31Entries();
+      fetchMonthlyCount();
     }
   }, [token]);
 
@@ -95,7 +74,7 @@ export const MonthlyCountProvider = ({
     <MonthlyCountContext.Provider
       value={{
         loading,
-        fetchLast31Entries,
+        fetchMonthlyCount,
         monthlyCount,
       }}
     >

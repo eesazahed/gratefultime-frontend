@@ -53,7 +53,7 @@ export default function Grateful() {
       const runChecks = async () => {
         setIsLoading(true);
         if (!loading) {
-          fetchUserData();
+          await fetchUserData();
           checkIfUnlocked();
           await checkIfSubmittedToday();
           generatePrompt();

@@ -43,7 +43,7 @@ const Settings = () => {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const timezoneOptions = timezones.map((tz) => ({
-    label: tz,
+    label: tz.replace(/\//g, " - ").replace(/_/g, " "),
     value: tz,
   }));
 
@@ -73,7 +73,7 @@ const Settings = () => {
         },
         body: JSON.stringify({
           preferred_unlock_time: parsedHour,
-          timezone: selectedTimezone,
+          user_timezone: selectedTimezone,
         }),
       });
 
@@ -139,10 +139,17 @@ const Settings = () => {
 
   useFocusEffect(
     useCallback(() => {
-      fetchUserData();
-      if (preferredUnlockTime !== null)
-        setSelectedHour(preferredUnlockTime.toString());
-      if (userTimezone) setSelectedTimezone(userTimezone);
+      const asyncFetchData = async () => {
+        await fetchUserData();
+        if (preferredUnlockTime !== null) {
+          setSelectedHour(preferredUnlockTime.toString());
+        }
+        if (userTimezone) {
+          setSelectedTimezone(userTimezone);
+        }
+      };
+
+      asyncFetchData();
     }, [preferredUnlockTime, userTimezone])
   );
 
@@ -200,23 +207,6 @@ const Settings = () => {
           <ThemedText style={styles.errorText}>{error.unlockTime}</ThemedText>
         )}
 
-        <ThemedText style={styles.label}>Timezone</ThemedText>
-        <Dropdown
-          data={timezoneOptions}
-          labelField="label"
-          valueField="value"
-          value={selectedTimezone}
-          onChange={(item) => {
-            setSelectedTimezone(item.value);
-          }}
-          placeholder="Select timezone"
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-        />
-
         <Button
           title="Open notification settings"
           style={styles.settingsButton}
@@ -250,6 +240,26 @@ const Settings = () => {
 
           {showAdvanced && (
             <View style={styles.advancedSettings}>
+              <View>
+                <ThemedText style={styles.label}>Timezone</ThemedText>
+                <Dropdown
+                  data={timezoneOptions}
+                  labelField="label"
+                  valueField="value"
+                  value={selectedTimezone}
+                  onChange={(item) => {
+                    setSelectedTimezone(item.value);
+                  }}
+                  placeholder="Select timezone"
+                  style={styles.dropdown}
+                  containerStyle={styles.dropdownContainerStyle}
+                  itemTextStyle={{ color: "#fff" }}
+                  itemContainerStyle={styles.dropdownItemContainerStyle}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  activeColor="#323232"
+                />
+              </View>
               <Button
                 title="Logout"
                 onPress={handleLogout}
@@ -301,12 +311,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#333",
     marginHorizontal: 20,
+    borderRadius: 10,
   },
   hourDisplayText: { fontSize: 24 },
   selectInput: {
     height: 50,
     backgroundColor: "#1c1c1c",
-    borderRadius: 8,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: "#333",
     paddingHorizontal: 12,
@@ -354,13 +365,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-    color: "#fff",
+  dropdownContainerStyle: {
     backgroundColor: "#1c1c1c",
     borderRadius: 8,
-    paddingHorizontal: 10,
+    overflow: "hidden",
+    marginVertical: 10,
+    borderWidth: 0,
+  },
+  dropdownItemContainerStyle: {
+    color: "#fff",
+    backgroundColor: "#1c1c1c",
   },
   iconStyle: {
     width: 20,

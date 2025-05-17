@@ -17,7 +17,7 @@ import { ThemedText } from "@/components/ThemedText";
 const Home = () => {
   const { token } = useAuth();
   const { fetchUserData, preferredUnlockTime } = useUser();
-  const { fetchLast31Entries, monthlyCount } = useMonthlyCount();
+  const { fetchMonthlyCount, monthlyCount } = useMonthlyCount();
   const router = useRouter();
 
   const [monthlyCountData, setMonthlyCountData] = useState<number | null>(null);
@@ -37,25 +37,23 @@ const Home = () => {
     useCallback(() => {
       setLoadingData(true);
 
-      if (token) {
-        fetchUserData();
-        if (preferredUnlockTime) {
-          scheduleDailyNotification(preferredUnlockTime);
-        }
+      const asyncFetchData = async () => {
+        if (token) {
+          await fetchUserData();
+          if (preferredUnlockTime) {
+            scheduleDailyNotification(preferredUnlockTime);
+          }
 
-        fetchLast31Entries();
-        if (typeof monthlyCount === "number") {
-          setMonthlyCountData(monthlyCount);
-          setLoadingData(false);
+          await fetchMonthlyCount();
+          if (typeof monthlyCount === "number") {
+            setMonthlyCountData(monthlyCount);
+            setLoadingData(false);
+          }
         }
-      }
-    }, [
-      token,
-      preferredUnlockTime,
-      // fetchUserData,
-      monthlyCount,
-      // fetchLast31Entries,
-    ])
+      };
+
+      asyncFetchData();
+    }, [token, preferredUnlockTime, monthlyCount])
   );
 
   if (!token) {
