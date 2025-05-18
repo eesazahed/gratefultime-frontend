@@ -1,0 +1,25 @@
+{
+  "cli": {
+    "version": ">= 16.6.1",
+    "appVersionSource": "remote",
+    "promptToConfigurePushNotifications": false
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "credentialsSource": "local"
+    },
+    "preview": {
+      "distribution": "internal",
+      "credentialsSource": "local"
+    },
+    "production": {
+      "autoIncrement": true,
+      "credentialsSource": "local"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

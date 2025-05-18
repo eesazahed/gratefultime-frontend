@@ -10,7 +10,11 @@
     "newArchEnabled": true,
     "ios": {
       "usesAppleSignIn": true,
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hackclub.gratefultime",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +30,12 @@
     "plugins": [
       "expo-apple-authentication",
       "expo-router",
-      ["expo-notifications", { "enableBackgroundRemoteNotifications": true }],
+      [
+        "expo-notifications",
+        {
+          "enableBackgroundRemoteNotifications": true
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -43,7 +52,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "6e5f7207-e065-403b-af34-aa6ab7c821b3"
+        "projectId": "bcb71800-104e-49ff-bb97-26dbae6cace9"
       }
     },
     "owner": "eszhd"

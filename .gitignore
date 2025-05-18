@@ -3,6 +3,10 @@
 # dependencies
 node_modules/
 
+# secret
+certs/
+credentials.json
+
 # Expo
 .expo/
 dist/
@@ -36,4 +40,4 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-app-example
+build*

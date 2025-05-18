@@ -62,7 +62,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       setUserTimezone(data.data.user_timezone);
     } catch (error) {
       console.error("Error fetching unlock time:", error);
-      // Preserve previous state
     } finally {
       setLoading(false);
     }
