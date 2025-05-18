@@ -35,7 +35,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     null
   );
   const [userTimezone, setUserTimezone] = useState<string | null>(null);
-
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchUserData = async () => {
@@ -48,6 +47,11 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         },
       });
 
+      if (response.status === 429) {
+        console.error("Rate limit exceeded. User data state preserved.");
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to fetch unlock time");
       }
@@ -58,6 +62,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       setUserTimezone(data.data.user_timezone);
     } catch (error) {
       console.error("Error fetching unlock time:", error);
+      // Preserve previous state
     } finally {
       setLoading(false);
     }

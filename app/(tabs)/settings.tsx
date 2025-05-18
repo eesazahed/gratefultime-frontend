@@ -79,6 +79,13 @@ const Settings = () => {
 
       const data = await response.json();
 
+      if (response.status === 429) {
+        setError({
+          submission: "Rate limit exceeded. Please try again later.",
+        });
+        return;
+      }
+
       if (!response.ok) {
         setError({ submission: data.message || "Error saving settings." });
         return;
@@ -117,6 +124,13 @@ const Settings = () => {
               );
 
               const data = await response.json();
+
+              if (response.status === 429) {
+                setError({
+                  submission: "Rate limit exceeded. Please try again later.",
+                });
+                return;
+              }
 
               if (!response.ok) {
                 setError({

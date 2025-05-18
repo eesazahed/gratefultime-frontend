@@ -110,6 +110,11 @@ const CalendarGrid = ({
       );
       const data = await response.json();
 
+      if (response.status === 429) {
+        console.error("Rate limit exceeded. Retaining previous state.");
+        return;
+      }
+
       if (!response.ok) {
         console.error("Error fetching entry details:", data);
         return;

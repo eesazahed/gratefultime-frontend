@@ -1,1 +1,5 @@
-export const BackendServer = "https://gratefultime.app/api/v1";
+const DEV_MODE = false;
+
+export const BackendServer = DEV_MODE
+  ? "http://10.0.0.15:5000/api/v1"
+  : "https://www.gratefultime.app/api/v1";

@@ -35,6 +35,11 @@ const AppleSignInPage = () => {
         }),
       });
 
+      if (response.status === 429) {
+        console.error("Rate limit exceeded. Please try again later.");
+        return;
+      }
+
       const data = await response.json();
 
       if (!response.ok) {

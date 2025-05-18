@@ -42,6 +42,13 @@ const Entries = () => {
         }
       );
 
+      if (response.status === 429) {
+        console.warn("Rate limit exceeded");
+        setLoading(false);
+        setIsFetchingMore(false);
+        return;
+      }
+
       const json = await response.json();
       const newEntries = json.data;
       const nextOffset = json.nextOffset;

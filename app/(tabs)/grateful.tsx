@@ -143,6 +143,15 @@ export default function Grateful() {
         }),
       });
 
+      if (response.status === 429) {
+        console.warn("Rate limit exceeded");
+        setErrors((prev) => ({
+          ...prev,
+          submission: "Rate limit exceeded. Please try again shortly.",
+        }));
+        return;
+      }
+
       const data = await response.json();
 
       if (!response.ok) {

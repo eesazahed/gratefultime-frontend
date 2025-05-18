@@ -32,6 +32,12 @@ const Calendar = () => {
 
           const data = await response.json();
 
+          if (response.status === 429) {
+            console.warn("Rate limit exceeded");
+            setLoading(false);
+            return;
+          }
+
           if (!response.ok) {
             console.error("Error fetching entries:", data);
             setLoading(false);

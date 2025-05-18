@@ -38,6 +38,13 @@ const MonthlySummary = () => {
             },
           });
 
+          if (response.status === 429) {
+            console.warn("Rate limit exceeded");
+            setSummary("Rate limit exceeded. Please try again later.");
+            setLoading(false);
+            return;
+          }
+
           const data = await response.json();
 
           if (!response.ok) {

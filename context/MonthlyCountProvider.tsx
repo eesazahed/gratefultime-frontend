@@ -50,6 +50,11 @@ export const MonthlyCountProvider = ({
         },
       });
 
+      if (response.status === 429) {
+        console.error("Rate limit exceeded. Monthly count state preserved.");
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to fetch monthly count");
       }
@@ -58,7 +63,6 @@ export const MonthlyCountProvider = ({
       setMonthlyCount(data.days_count ?? 0);
     } catch (error) {
       console.error("Error fetching monthly count:", error);
-      setMonthlyCount(0);
     } finally {
       setLoading(false);
     }
