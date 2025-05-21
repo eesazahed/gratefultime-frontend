@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
+import { ThemedText } from "./ThemedText";
 
 const AppleSignInPage = () => {
   const router = useRouter();
   const { login } = useAuth();
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
+
   const handleAppleSignIn = async () => {
+    setErrorMessage("");
+    setLoginSuccess(false);
+
     try {
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
@@ -35,22 +42,21 @@ const AppleSignInPage = () => {
         }),
       });
 
-      if (response.status === 429) {
-        console.error("Rate limit exceeded. Please try again later.");
-        return;
-      }
-
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("Apple sign-in failed:", data);
+        setErrorMessage(data?.message || "Apple sign-in failed");
         return;
       }
 
+      setLoginSuccess(true);
+      setErrorMessage("Logging in...");
+
       await login(data.token);
       router.push("/");
-    } catch (e) {
-      console.error("Apple sign-in error:", e);
+    } catch (error) {
+      console.error("Apple sign-in error:", error);
+      setErrorMessage("Please try signing in in again");
     }
   };
 
@@ -65,19 +71,34 @@ const AppleSignInPage = () => {
         style={styles.button}
         onPress={handleAppleSignIn}
       />
+      {errorMessage !== "" && (
+        <ThemedText
+          style={[
+            styles.errorText,
+            { color: loginSuccess ? "#32a852" : "red" },
+          ]}
+        >
+          {errorMessage}
+        </ThemedText>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 150,
     alignItems: "center",
-    justifyContent: "center",
+    paddingHorizontal: 20,
   },
   button: {
     width: 200,
     height: 44,
+  },
+  errorText: {
+    fontSize: 14,
+    textAlign: "center",
+    marginTop: 40,
   },
 });
 

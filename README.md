@@ -46,7 +46,6 @@ GratefulTime is an iOS mobile application designed to cultivate daily gratitude 
 ## Installation
 
 - Available on the Apple App Store.
-- Compatible with iOS version X.X and above.
 
 ---
 

@@ -59,6 +59,11 @@ const Home = () => {
     return (
       <Container style={styles.loginContainer}>
         <View>
+          <Header
+            title="GratefulTime"
+            fontSize={34}
+            style={{ marginTop: 0, marginBottom: 100 }}
+          />
           <AppleSignInPage />
         </View>
       </Container>
@@ -103,7 +108,6 @@ const Home = () => {
 const styles = StyleSheet.create({
   loginContainer: {
     justifyContent: "center",
-    alignItems: "center",
   },
   text: {
     fontSize: 24,

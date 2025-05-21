@@ -16,7 +16,7 @@ import EntryCard from "../../components/EntryCard";
 
 import type { Entry } from "@/types";
 
-const PAGE_SIZE = 1;
+const PAGE_SIZE = 10;
 
 const Entries = () => {
   const { token } = useAuth();
