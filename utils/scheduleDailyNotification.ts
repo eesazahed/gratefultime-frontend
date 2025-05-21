@@ -6,7 +6,7 @@ export const scheduleDailyNotification = async (hour: number) => {
   Notifications.scheduleNotificationAsync({
     content: {
       title: "What are 3 things you're grateful for?",
-      body: "Open out your gratitude journal!",
+      body: "Open your gratitude journal!",
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
