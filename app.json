@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "gratefultime",
-    "slug": "gratefultime",
+    "name": "gratefulness-mobile",
+    "slug": "gratefulness-mobile",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/gratefultimelogo.png",
