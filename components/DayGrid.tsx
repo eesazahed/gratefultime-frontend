@@ -5,7 +5,7 @@ import DayCell from "./DayCell";
 type DayGridProps = {
   days: number[];
   startDay: number;
-  entries: { [key: string]: string };
+  entries: { [key: string]: { id: number; timestamp: string } };
   today: Date;
   currentMonth: Date;
   handleDayPress: (day: number) => void;
@@ -38,7 +38,7 @@ const DayGrid = ({
 
     days.forEach((day) => {
       const formattedDate = getFormattedDate(day);
-      const hasEntry = formattedDate in entries;
+      const hasEntry = entries.hasOwnProperty(formattedDate);
       const isFuture = new Date(formattedDate) > today;
 
       const isToday =

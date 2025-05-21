@@ -6,9 +6,16 @@ import { useFocusEffect } from "expo-router";
 import { Container } from "../../components/ui/Container";
 import { BackendServer } from "@/constants/BackendServer";
 
+type EntryMap = {
+  [localDate: string]: {
+    id: number;
+    timestamp: string;
+  };
+};
+
 const Calendar = () => {
   const { token } = useAuth();
-  const [entries, setEntries] = useState<{ [localTime: string]: string }>({});
+  const [entries, setEntries] = useState<EntryMap>({});
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -44,15 +51,19 @@ const Calendar = () => {
             return;
           }
 
-          const entryMap: { [localTime: string]: string } = {};
+          const entryMap: EntryMap = {};
 
-          data.data.forEach((utcTimestamp: string) => {
-            const localTime = new Date(utcTimestamp).toLocaleDateString(
+          data.data.forEach((entry: { id: number; timestamp: string }) => {
+            const localDate = new Date(entry.timestamp).toLocaleDateString(
               "en-CA"
             );
-            entryMap[localTime] = utcTimestamp;
+            entryMap[localDate] = {
+              id: entry.id,
+              timestamp: entry.timestamp,
+            };
           });
 
+          console.log(entryMap);
           setEntries(entryMap);
         } catch (error) {
           console.error("Error fetching entries:", error);

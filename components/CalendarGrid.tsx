@@ -7,9 +7,15 @@ import EntryDetailsModal from "./EntryDetailsModal";
 import { useAuth } from "../context/AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
 import { Header } from "./ui/Header";
-
-import type { Entry } from "@/types";
 import { useRouter } from "expo-router";
+import type { Entry } from "@/types";
+
+type EntryMap = {
+  [localDate: string]: {
+    id: number;
+    timestamp: string;
+  };
+};
 
 const CalendarGrid = ({
   entries,
@@ -17,7 +23,7 @@ const CalendarGrid = ({
   setCurrentMonth,
   loading,
 }: {
-  entries: { [localTime: string]: string };
+  entries: EntryMap;
   currentMonth: Date;
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
   loading: boolean;
@@ -89,9 +95,9 @@ const CalendarGrid = ({
       currentMonth.getMonth(),
       day
     );
-    const dbTimestamp = entries[localDate];
+    const entryMeta = entries[localDate];
 
-    if (!dbTimestamp) {
+    if (!entryMeta) {
       if (pressedDate.getTime() === today.getTime()) {
         router.push("/(tabs)/grateful");
       }
@@ -99,15 +105,12 @@ const CalendarGrid = ({
     }
 
     try {
-      const response = await fetch(
-        `${BackendServer}/entries/day?date=${encodeURIComponent(dbTimestamp)}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${BackendServer}/entries/${entryMeta.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
 
       if (response.status === 429) {
