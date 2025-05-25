@@ -12,48 +12,81 @@ import { LargeLink } from "@/components/ui/LargeLink";
 import { Header } from "@/components/ui/Header";
 import { useMonthlyCount } from "@/context/MonthlyCountProvider";
 import { ThemedText } from "@/components/ThemedText";
+import { BackendServer } from "@/constants/BackendServer";
+import { Button } from "@/components/ui/Button";
 
 const Home = () => {
   const { token } = useAuth();
   const { fetchUserData, preferredUnlockTime } = useUser();
-  const { fetchMonthlyCount, monthlyCount } = useMonthlyCount();
+  const { fetchMonthlyCount } = useMonthlyCount();
   const router = useRouter();
 
   const [monthlyCountData, setMonthlyCountData] = useState<number | null>(null);
   const [loadingData, setLoadingData] = useState<boolean>(true);
+  const [serverAvailable, setServerAvailable] = useState<boolean | null>(null);
+
+  const checkServerStatus = useCallback(async () => {
+    try {
+      const response = await fetch(`${BackendServer}`);
+      const data = await response.json();
+      const isRunning = data.message === "server running";
+      setServerAvailable((prev) => (prev !== isRunning ? isRunning : prev));
+    } catch {
+      setServerAvailable((prev) => (prev !== false ? false : prev));
+    } finally {
+    }
+  }, []);
+
+  const retry = () => {
+    checkServerStatus();
+  };
 
   useEffect(() => {
-    const requestPermissions = async () => {
+    const initialize = async () => {
+      checkServerStatus();
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== "granted") {
         console.log("Notification permission not granted");
       }
     };
-    requestPermissions();
+    initialize();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      setLoadingData(true);
-
       const asyncFetchData = async () => {
+        setLoadingData(true);
         if (token) {
           await fetchUserData();
           if (preferredUnlockTime) {
             scheduleDailyNotification(preferredUnlockTime);
           }
-
-          await fetchMonthlyCount();
-          if (typeof monthlyCount === "number") {
-            setMonthlyCountData(monthlyCount);
-            setLoadingData(false);
+          const count = await fetchMonthlyCount();
+          if (typeof count === "number") {
+            setMonthlyCountData(count);
           }
         }
+        setLoadingData(false);
       };
-
       asyncFetchData();
-    }, [token, preferredUnlockTime, monthlyCount])
+    }, [token, preferredUnlockTime])
   );
+
+  if (serverAvailable === false) {
+    return (
+      <Container style={styles.centered}>
+        <ThemedText style={styles.lockedText}>
+          Could not connect to server
+        </ThemedText>
+        <Button
+          title={"Retry"}
+          onPress={retry}
+          variant="outline"
+          style={styles.unlockButton}
+        />
+      </Container>
+    );
+  }
 
   if (!token) {
     return (
@@ -113,7 +146,28 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "600",
   },
-  disclaimer: { fontSize: 14, margin: 8, color: "#ccc", fontStyle: "italic" },
+  disclaimer: {
+    fontSize: 14,
+    margin: 8,
+    color: "#ccc",
+    fontStyle: "italic",
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  lockedText: {
+    fontSize: 18,
+    textAlign: "center",
+    paddingBottom: 64,
+  },
+  unlockButton: {
+    paddingHorizontal: 20,
+    backgroundColor: "#1c1c1c",
+    borderWidth: 1,
+    borderColor: "#333",
+  },
 });
 
 export default Home;
