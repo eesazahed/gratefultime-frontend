@@ -41,5 +41,3 @@ yarn-error.*
 *.tsbuildinfo
 
 build*
-
-/constants/BackendServer.ts
