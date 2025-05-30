@@ -8,15 +8,15 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "credentialsSource": "local"
+      "credentialsSource": "remote"
     },
     "preview": {
       "distribution": "internal",
-      "credentialsSource": "local"
+      "credentialsSource": "remote"
     },
     "production": {
       "autoIncrement": true,
-      "credentialsSource": "local"
+      "credentialsSource": "remote"
     }
   },
   "submit": {

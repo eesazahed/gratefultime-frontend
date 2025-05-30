@@ -11,7 +11,7 @@
     "ios": {
       "usesAppleSignIn": true,
       "supportsTablet": true,
-      "bundleIdentifier": "com.hackclub.gratefultime",
+      "bundleIdentifier": "app.gratefultime",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -51,7 +51,9 @@
     },
     "extra": {
       "router": {},
-      "eas": {}
+      "eas": {
+        "projectId": "73f6a530-17a7-4556-a036-24a5c4a6eec7"
+      }
     },
     "owner": "eszhd"
   }

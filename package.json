@@ -43,7 +43,9 @@
     "jest-expo": "~53.0.0",
     "react-native": "^0.79.2",
     "react-test-renderer": "19.0.0",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
   },
   "private": true,
   "expo": {
