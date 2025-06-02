@@ -250,7 +250,6 @@ export default function Grateful() {
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
         <Header title="I'm grateful for" />
-
         {entries.map((entry, i) => {
           const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
           return (
@@ -268,7 +267,6 @@ export default function Grateful() {
             />
           );
         })}
-
         <ThemedText style={styles.prompt}>{gratefulnessPrompt}</ThemedText>
         <TextArea
           maxLength={100}
@@ -295,7 +293,6 @@ export default function Grateful() {
             {errors.submission}
           </ThemedText>
         ) : null}
-
         <Button
           title="Save Entry"
           onPress={saveEntries}
@@ -335,6 +332,8 @@ const styles = StyleSheet.create({
   },
   regenButton: {
     marginBottom: 52,
+    backgroundColor: "#1c1c1c",
+    borderColor: "#333",
   },
   saveButton: {
     transitionDuration: "0.25s",

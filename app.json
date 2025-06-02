@@ -4,7 +4,7 @@
     "slug": "gratefultime",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/gratefultimelogo.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -39,7 +39,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/gratefultimelogo.png",
+          "image": "./assets/images/logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#000000"

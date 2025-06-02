@@ -51,7 +51,7 @@ const EntryCard = ({ entry, showDelete = false, onDelete }: EntryCardProps) => {
 const styles = StyleSheet.create({
   entryContainer: {
     marginVertical: 20,
-    backgroundColor: "#121212",
+    backgroundColor: "#1c1c1c",
     borderRadius: 20,
     paddingHorizontal: 20,
     elevation: 10,
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
   responseText: {
     color: "#fff",
+    marginTop: 10,
     marginBottom: 20,
     fontSize: 15,
   },

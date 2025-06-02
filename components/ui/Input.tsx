@@ -5,7 +5,6 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
 import { ThemedText } from "../ThemedText";
 
 export interface InputProps extends TextInputProps {
@@ -21,8 +20,6 @@ export function Input({
   style,
   ...props
 }: InputProps) {
-  const { colors } = useTheme();
-
   return (
     <View style={[{ marginBottom: 16 }, containerStyle]}>
       {label && (
@@ -39,23 +36,23 @@ export function Input({
       <TextInput
         style={[
           {
-            backgroundColor: colors.card,
+            backgroundColor: "#2c2c2c",
             borderWidth: 1,
-            borderColor: error ? colors.notification : colors.border,
+            borderColor: "#333",
             borderRadius: 8,
             padding: 12,
             fontSize: 16,
-            color: colors.text,
+            color: "#fff",
           },
           style,
         ]}
-        placeholderTextColor={colors.text + "80"}
+        placeholderTextColor="#aaaaaa"
         {...props}
       />
       {error ? (
         <ThemedText
           style={{
-            color: colors.notification,
+            color: "red",
             fontSize: 14,
             marginTop: 4,
           }}
