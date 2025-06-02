@@ -237,7 +237,7 @@ export default function Grateful() {
           <Button
             title="Unlock early"
             onPress={() => setIsLocked(false)}
-            fontSize={24}
+            fontSize={22}
             variant="outline"
             style={styles.unlockButton}
           />
@@ -331,6 +331,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
   regenButton: {
+    marginTop: 10,
     marginBottom: 52,
     backgroundColor: "#1c1c1c",
     borderColor: "#333",
@@ -350,10 +351,10 @@ const styles = StyleSheet.create({
     paddingBottom: 64,
   },
   unlockButton: {
-    paddingHorizontal: 40,
-    paddingVertical: 20,
-    borderRadius: 20,
-    backgroundColor: "#2c2c2c",
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 10,
+    backgroundColor: "#1c1c1c",
     borderWidth: 2,
     borderColor: "#333",
   },
