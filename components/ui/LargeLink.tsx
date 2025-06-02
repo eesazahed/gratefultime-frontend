@@ -37,8 +37,8 @@ export function LargeLink({
       activeOpacity={0.5}
       style={[
         {
-          marginVertical: 15,
-          backgroundColor: "#1c1c1c",
+          marginTop: 10,
+          backgroundColor: "#2c2c2c",
           borderWidth: 2,
           borderColor: "#323232",
           borderRadius: 8,
@@ -46,7 +46,7 @@ export function LargeLink({
           alignItems: "center",
           justifyContent: "space-between",
           paddingHorizontal: 20,
-          paddingVertical: 20,
+          paddingVertical: 30,
           opacity: loading ? 0.5 : 1,
         },
         style,
@@ -75,8 +75,11 @@ export function LargeLink({
                   textAlign: "center",
                 }}
               >
-                <Text style={{ color: "#3af07c" }}> {data}</Text> /{" "}
-                {daysThisMonth}
+                <Text style={{ color: "#3af07c" }}>
+                  {" "}
+                  {typeof data === "number" ? data : 0}
+                </Text>{" "}
+                / {daysThisMonth}
               </ThemedText>
             )}
           </View>

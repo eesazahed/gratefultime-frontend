@@ -237,6 +237,7 @@ export default function Grateful() {
           <Button
             title="Unlock early"
             onPress={() => setIsLocked(false)}
+            fontSize={24}
             variant="outline"
             style={styles.unlockButton}
           />
@@ -321,6 +322,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 36,
   },
   prompt: {
     fontSize: 16,
@@ -343,14 +345,17 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   lockedText: {
-    fontSize: 18,
+    fontSize: 24,
+    lineHeight: 36,
     textAlign: "center",
     paddingBottom: 64,
   },
   unlockButton: {
-    paddingHorizontal: 20,
-    backgroundColor: "#1c1c1c",
-    borderWidth: 1,
+    paddingHorizontal: 40,
+    paddingVertical: 20,
+    borderRadius: 20,
+    backgroundColor: "#2c2c2c",
+    borderWidth: 2,
     borderColor: "#333",
   },
 });

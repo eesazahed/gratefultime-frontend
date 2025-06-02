@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
     color: "#8f8f8f",
     fontStyle: "italic",
     marginTop: 20,
+    marginBottom: 10,
   },
   hourSelector: {
     width: "100%",

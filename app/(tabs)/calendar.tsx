@@ -63,7 +63,6 @@ const Calendar = () => {
             };
           });
 
-          console.log(entryMap);
           setEntries(entryMap);
         } catch (error) {
           console.error("Error fetching entries:", error);
