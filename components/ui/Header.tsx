@@ -7,14 +7,14 @@ interface HeaderProps {
   fontSize?: number;
 }
 
-export function Header({ title, style, fontSize = 28 }: HeaderProps) {
+export function Header({ title, style, fontSize = 34 }: HeaderProps) {
   return (
     <View
       style={[
         {
           marginHorizontal: "auto",
-          marginTop: 64,
-          marginBottom: 32,
+          marginTop: 160,
+          marginBottom: 40,
         },
         style,
       ]}

@@ -125,7 +125,7 @@ const Entries = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
-        <Header title="Your Past Entries" />
+        <Header title="Your Past Entries" style={{ marginBottom: 5 }} />
         {loading ? (
           <ActivityIndicator size="large" style={styles.loadingContainer} />
         ) : !entries || entries.length === 0 ? (
@@ -160,9 +160,7 @@ const Entries = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingBottom: 100,
-  },
+  container: { flexGrow: 1, paddingBottom: 200 },
   loadingContainer: {
     marginTop: 64,
     flex: 1,

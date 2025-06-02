@@ -106,11 +106,7 @@ const Home = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
-        <Header
-          title="GratefulTime"
-          fontSize={34}
-          style={{ marginTop: 160, marginBottom: 40 }}
-        />
+        <Header title="GratefulTime" fontSize={34} />
         <View style={{ marginVertical: 20 }}>
           <ThemedText style={{ fontSize: 24, marginBottom: 10 }}>
             Fill out today's journal
@@ -156,10 +152,7 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    paddingBottom: 300,
-  },
+  container: { flexGrow: 1, paddingBottom: 200 },
   loginContainer: {
     justifyContent: "center",
   },

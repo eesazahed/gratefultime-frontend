@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   responseText: {
     color: "#fff",
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 30,
     fontSize: 15,
   },
   closeButton: {

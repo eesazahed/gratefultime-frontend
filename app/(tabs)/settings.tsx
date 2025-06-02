@@ -295,7 +295,7 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, paddingBottom: 100 },
+  container: { flexGrow: 1, paddingBottom: 200 },
   label: {
     fontSize: 16,
     color: "#8f8f8f",
