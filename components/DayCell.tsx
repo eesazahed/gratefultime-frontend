@@ -39,13 +39,13 @@ const DayCell = ({
 
   return (
     <TouchableOpacity
-      style={[styles.dayCell, { padding: isIpad ? 6 : 3 }]}
+      style={[styles.dayCell, { padding: isIpad ? 10 : 3 }]}
       disabled={isFuture}
       activeOpacity={!isFuture ? 0.6 : 1}
       onPress={onPress}
     >
       <View style={[styles.day, getDayStyle()]}>
-        <Text style={[getTextStyle(), { fontSize: isIpad ? 20 : 18 }]}>
+        <Text style={[getTextStyle(), { fontSize: isIpad ? 24 : 18 }]}>
           {day}
         </Text>
       </View>

@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     height: isIpad ? 100 : 50,
-    marginBottom: isIpad ? 10 : 0,
+    marginBottom: isIpad ? 5 : 0,
   },
   emptyDayCell: {
     width: "14%",
