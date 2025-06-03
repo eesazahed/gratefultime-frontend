@@ -1,6 +1,9 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import DayCell from "./DayCell";
+
+const { width, height } = Dimensions.get("window");
+const isIpad = width >= 700 && height >= 700;
 
 type DayGridProps = {
   days: number[];
@@ -55,6 +58,7 @@ const DayGrid = ({
           isFuture={isFuture}
           isToday={isToday}
           onPress={() => handleDayPress(day)}
+          isIpad={isIpad}
         />
       );
     });
@@ -88,7 +92,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    height: 50,
+    height: isIpad ? 100 : 50,
+    marginBottom: isIpad ? 10 : 0,
   },
   emptyDayCell: {
     width: "14%",

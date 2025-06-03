@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   navigationButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
+    marginTop: 60,
   },
   navButton: {
     flex: 1,

@@ -91,10 +91,6 @@ const Calendar = () => {
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1, paddingBottom: 200 },
-
-  // container: {
-  //   flex: 1,
-  // },
 });
 
 export default Calendar;

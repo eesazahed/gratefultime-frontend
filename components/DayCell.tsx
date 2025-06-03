@@ -8,6 +8,7 @@ type DayCellProps = {
   isFuture: boolean;
   isToday: boolean;
   onPress: () => void;
+  isIpad: boolean;
 };
 
 const DayCell = ({
@@ -16,6 +17,7 @@ const DayCell = ({
   isFuture,
   isToday,
   onPress,
+  isIpad,
 }: DayCellProps) => {
   const getDayStyle = () => {
     if (hasEntry) {
@@ -37,13 +39,15 @@ const DayCell = ({
 
   return (
     <TouchableOpacity
-      style={styles.dayCell}
+      style={[styles.dayCell, { padding: isIpad ? 6 : 3 }]}
       disabled={isFuture}
       activeOpacity={!isFuture ? 0.6 : 1}
       onPress={onPress}
     >
       <View style={[styles.day, getDayStyle()]}>
-        <Text style={[getTextStyle(), { fontSize: 18 }]}>{day}</Text>
+        <Text style={[getTextStyle(), { fontSize: isIpad ? 20 : 18 }]}>
+          {day}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -51,10 +55,9 @@ const DayCell = ({
 
 const styles = StyleSheet.create({
   dayCell: {
-    flexBasis: "14%",
+    width: "14.2857%",
     alignItems: "center",
     justifyContent: "center",
-    padding: 3,
   },
   day: {
     width: "100%",
