@@ -8,11 +8,7 @@ interface ContainerProps {
   backgroundColor?: string;
 }
 
-export function Container({
-  children,
-  style,
-  backgroundColor,
-}: ContainerProps) {
+const Container = ({ children, style, backgroundColor }: ContainerProps) => {
   const { colors } = useTheme();
 
   return (
@@ -30,4 +26,6 @@ export function Container({
       {children}
     </View>
   );
-}
+};
+
+export default Container;

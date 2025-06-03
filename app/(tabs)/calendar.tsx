@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import CalendarGrid from "../../components/CalendarGrid";
 import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect } from "expo-router";
-import { Container } from "../../components/ui/Container";
+import Container from "../../components/ui/Container";
 import { BackendServer } from "@/constants/BackendServer";
 
 type EntryMap = {
@@ -76,21 +76,25 @@ const Calendar = () => {
   );
 
   return (
-    <Container style={styles.container}>
-      <CalendarGrid
-        entries={entries}
-        currentMonth={currentMonth}
-        setCurrentMonth={setCurrentMonth}
-        loading={loading}
-      />
-    </Container>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Container>
+        <CalendarGrid
+          entries={entries}
+          currentMonth={currentMonth}
+          setCurrentMonth={setCurrentMonth}
+          loading={loading}
+        />
+      </Container>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flexGrow: 1, paddingBottom: 200 },
+
+  // container: {
+  //   flex: 1,
+  // },
 });
 
 export default Calendar;

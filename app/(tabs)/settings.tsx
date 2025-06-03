@@ -11,10 +11,10 @@ import {
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
-import { Container } from "../../components/ui/Container";
-import { Button } from "../../components/ui/Button";
-import { ThemedText } from "../../components/ThemedText";
-import { Header } from "../../components/ui/Header";
+import Container from "../../components/ui/Container";
+import Button from "../../components/ui/Button";
+import ThemedText from "../../components/ThemedText";
+import Header from "../../components/ui/Header";
 import { BackendServer } from "@/constants/BackendServer";
 import { useFocusEffect } from "expo-router";
 import { scheduleDailyNotification } from "@/utils/scheduleDailyNotification";

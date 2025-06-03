@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { ThemedText } from "../ThemedText";
+import ThemedText from "../ThemedText";
 
 interface LargeLinkProps {
   onPress?: () => void;
@@ -17,13 +17,13 @@ interface LargeLinkProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export function LargeLink({
+const LargeLink = ({
   onPress,
   title,
   loading = false,
   data,
   style,
-}: LargeLinkProps) {
+}: LargeLinkProps) => {
   const daysThisMonth = new Date(
     new Date().getFullYear(),
     new Date().getMonth() + 1,
@@ -77,7 +77,7 @@ export function LargeLink({
               >
                 <Text style={{ color: "#3af07c" }}>
                   {" "}
-                  {typeof data === "number" ? data : 0}
+                  {typeof parseInt(data) === "number" ? data : 0}
                 </Text>{" "}
                 / {daysThisMonth}
               </ThemedText>
@@ -97,4 +97,6 @@ export function LargeLink({
       </ThemedText>
     </TouchableOpacity>
   );
-}
+};
+
+export default LargeLink;

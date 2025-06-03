@@ -1,10 +1,10 @@
-import { Input, InputProps } from "./Input";
+import Input, { InputProps } from "./Input";
 
 interface TextAreaProps extends Omit<InputProps, "multiline"> {
   minHeight?: number;
 }
 
-export function TextArea({ minHeight = 100, style, ...props }: TextAreaProps) {
+const TextArea = ({ minHeight = 100, style, ...props }: TextAreaProps) => {
   return (
     <Input
       multiline
@@ -19,4 +19,6 @@ export function TextArea({ minHeight = 100, style, ...props }: TextAreaProps) {
       {...props}
     />
   );
-}
+};
+
+export default TextArea;

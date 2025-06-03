@@ -6,7 +6,7 @@ import DayGrid from "./DayGrid";
 import EntryDetailsModal from "./EntryDetailsModal";
 import { useAuth } from "../context/AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
-import { Header } from "./ui/Header";
+import Header from "./ui/Header";
 import { useRouter } from "expo-router";
 import type { Entry } from "@/types";
 

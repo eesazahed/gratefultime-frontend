@@ -7,10 +7,10 @@ import {
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect, useRouter } from "expo-router";
-import { Container } from "../../components/ui/Container";
+import Container from "../../components/ui/Container";
 import { BackendServer } from "@/constants/BackendServer";
-import { ThemedText } from "@/components/ThemedText";
-import { Header } from "@/components/ui/Header";
+import ThemedText from "@/components/ThemedText";
+import Header from "@/components/ui/Header";
 import Markdown from "react-native-markdown-display";
 
 const MonthlySummary = () => {
@@ -97,7 +97,7 @@ const MonthlySummary = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
   goBack: {
     textAlign: "center",

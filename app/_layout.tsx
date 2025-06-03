@@ -21,7 +21,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-export default function RootLayout() {
+const RootLayout = () => {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -53,4 +53,6 @@ export default function RootLayout() {
       <StatusBar style="light" />
     </>
   );
-}
+};
+
+export default RootLayout;

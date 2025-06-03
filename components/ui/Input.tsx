@@ -5,7 +5,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { ThemedText } from "../ThemedText";
+import ThemedText from "../ThemedText";
 
 export interface InputProps extends TextInputProps {
   label?: string;
@@ -13,13 +13,13 @@ export interface InputProps extends TextInputProps {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
-export function Input({
+const Input = ({
   label,
   error,
   containerStyle,
   style,
   ...props
-}: InputProps) {
+}: InputProps) => {
   return (
     <View style={[{ marginBottom: 16 }, containerStyle]}>
       {label && (
@@ -64,4 +64,6 @@ export function Input({
       )}
     </View>
   );
-}
+};
+
+export default Input;

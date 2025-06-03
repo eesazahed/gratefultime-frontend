@@ -3,12 +3,12 @@ import { StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
 import { useFocusEffect } from "expo-router";
-import { Container } from "../../components/ui/Container";
-import { Input } from "../../components/ui/Input";
-import { TextArea } from "../../components/ui/TextArea";
-import { Button } from "../../components/ui/Button";
-import { ThemedText } from "../../components/ThemedText";
-import { Header } from "../../components/ui/Header";
+import Container from "../../components/ui/Container";
+import Input from "../../components/ui/Input";
+import TextArea from "../../components/ui/TextArea";
+import Button from "../../components/ui/Button";
+import ThemedText from "../../components/ThemedText";
+import Header from "../../components/ui/Header";
 import { BackendServer } from "@/constants/BackendServer";
 import { PromptList } from "@/constants/PromptList";
 
@@ -27,7 +27,7 @@ type Errors = {
   submission: string;
 };
 
-export default function Grateful() {
+const Grateful = () => {
   const { token } = useAuth();
   const { fetchUserData, preferredUnlockTime, loading } = useUser();
 
@@ -308,7 +308,7 @@ export default function Grateful() {
       </Container>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -359,3 +359,5 @@ const styles = StyleSheet.create({
     borderColor: "#333",
   },
 });
+
+export default Grateful;

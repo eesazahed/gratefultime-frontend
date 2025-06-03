@@ -7,10 +7,10 @@ import {
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect } from "expo-router";
-import { Container } from "../../components/ui/Container";
-import { Button } from "../../components/ui/Button";
-import { ThemedText } from "../../components/ThemedText";
-import { Header } from "../../components/ui/Header";
+import Container from "../../components/ui/Container";
+import Button from "../../components/ui/Button";
+import ThemedText from "../../components/ThemedText";
+import Header from "../../components/ui/Header";
 import { BackendServer } from "@/constants/BackendServer";
 import EntryCard from "../../components/EntryCard";
 

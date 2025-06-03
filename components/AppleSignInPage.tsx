@@ -4,7 +4,7 @@ import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
-import { ThemedText } from "./ThemedText";
+import ThemedText from "./ThemedText";
 
 const AppleSignInPage = () => {
   const router = useRouter();

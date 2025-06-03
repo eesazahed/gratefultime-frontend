@@ -1,24 +1,24 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { useAuth } from "../../context/AuthContext";
-import { Container } from "../../components/ui/Container";
 import AppleSignInPage from "../../components/AppleSignInPage";
 import { Link, useFocusEffect, useRouter } from "expo-router";
 import { scheduleDailyNotification } from "@/utils/scheduleDailyNotification";
+import { useUser } from "@/context/UserContext";
+import { BackendServer } from "@/constants/BackendServer";
+import { useMonthlyCount } from "@/context/MonthlyCountProvider";
 import * as Notifications from "expo-notifications";
 
-import { useUser } from "@/context/UserContext";
-import { LargeLink } from "@/components/ui/LargeLink";
-import { Header } from "@/components/ui/Header";
-import { useMonthlyCount } from "@/context/MonthlyCountProvider";
-import { ThemedText } from "@/components/ThemedText";
-import { BackendServer } from "@/constants/BackendServer";
-import { Button } from "@/components/ui/Button";
+import Container from "../../components/ui/Container";
+import LargeLink from "@/components/ui/LargeLink";
+import Header from "@/components/ui/Header";
+import ThemedText from "@/components/ThemedText";
+import Button from "@/components/ui/Button";
 
 const Home = () => {
   const { token } = useAuth();
   const { fetchUserData, preferredUnlockTime } = useUser();
-  const { fetchMonthlyCount } = useMonthlyCount();
+  const { fetchMonthlyCount, monthlyCount } = useMonthlyCount();
   const router = useRouter();
 
   const [monthlyCountData, setMonthlyCountData] = useState<number | null>(null);
@@ -33,7 +33,6 @@ const Home = () => {
       setServerAvailable((prev) => (prev !== isRunning ? isRunning : prev));
     } catch {
       setServerAvailable((prev) => (prev !== false ? false : prev));
-    } finally {
     }
   }, []);
 
@@ -52,24 +51,30 @@ const Home = () => {
     initialize();
   }, []);
 
+  useEffect(() => {
+    if (preferredUnlockTime) {
+      scheduleDailyNotification(preferredUnlockTime);
+    }
+  }, [preferredUnlockTime]);
+
+  useEffect(() => {
+    if (typeof monthlyCount === "number") {
+      setMonthlyCountData(monthlyCount);
+    }
+  }, [monthlyCount]);
+
   useFocusEffect(
     useCallback(() => {
       const asyncFetchData = async () => {
         setLoadingData(true);
         if (token) {
           await fetchUserData();
-          if (preferredUnlockTime) {
-            scheduleDailyNotification(preferredUnlockTime);
-          }
-          const count = await fetchMonthlyCount();
-          if (typeof count === "number") {
-            setMonthlyCountData(count);
-          }
+          await fetchMonthlyCount();
         }
         setLoadingData(false);
       };
       asyncFetchData();
-    }, [token, preferredUnlockTime])
+    }, [token])
   );
 
   if (serverAvailable === false) {

@@ -1,12 +1,12 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
-import { HapticTab } from "@/components/HapticTab";
+import HapticTab from "@/components/HapticTab";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import { useAuth } from "@/context/AuthContext";
 
-export default function TabLayout() {
+const TabLayout = () => {
   const { token } = useAuth();
 
   return (
@@ -90,4 +90,6 @@ export default function TabLayout() {
       />
     </Tabs>
   );
-}
+};
+
+export default TabLayout;

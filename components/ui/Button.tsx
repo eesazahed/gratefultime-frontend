@@ -6,7 +6,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
-import { ThemedText } from "../ThemedText";
+import ThemedText from "../ThemedText";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 interface ButtonProps {
@@ -22,7 +22,7 @@ interface ButtonProps {
   icon?: "remove" | "add";
 }
 
-export function Button({
+const Button = ({
   onPress,
   title,
   variant = "primary",
@@ -33,7 +33,7 @@ export function Button({
   style,
   noLoading = false,
   icon,
-}: ButtonProps) {
+}: ButtonProps) => {
   const { colors } = useTheme();
 
   const getBackgroundColor = () => {
@@ -92,4 +92,6 @@ export function Button({
       )}
     </TouchableOpacity>
   );
-}
+};
+
+export default Button;

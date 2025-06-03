@@ -60,7 +60,7 @@ export const MonthlyCountProvider = ({
       }
 
       const data = await response.json();
-      setMonthlyCount(data.days_count ?? 0);
+      setMonthlyCount(data.days_count);
     } catch (error) {
       console.error("Error fetching monthly count:", error);
     } finally {

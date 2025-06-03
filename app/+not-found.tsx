@@ -1,11 +1,11 @@
 import { Link, Stack } from "expo-router";
 import { StyleSheet } from "react-native";
 
-import { Container } from "@/components/ui/Container";
-import { Header } from "@/components/ui/Header";
-import { ThemedText } from "@/components/ThemedText";
+import Container from "@/components/ui/Container";
+import Header from "@/components/ui/Header";
+import ThemedText from "@/components/ThemedText";
 
-export default function NotFoundScreen() {
+const NotFoundScreen = () => {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -18,7 +18,7 @@ export default function NotFoundScreen() {
       </Container>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -32,3 +32,5 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
 });
+
+export default NotFoundScreen;

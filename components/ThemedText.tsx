@@ -6,13 +6,13 @@ export type ThemedTextProps = TextProps & {
   type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
 };
 
-export function ThemedText({
+const ThemedText = ({
   style,
   lightColor,
   darkColor,
   type = "default",
   ...rest
-}: ThemedTextProps) {
+}: ThemedTextProps) => {
   const color = "#fff";
 
   return (
@@ -29,7 +29,7 @@ export function ThemedText({
       {...rest}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   default: {
@@ -56,3 +56,5 @@ const styles = StyleSheet.create({
     color: "#0a7ea4",
   },
 });
+
+export default ThemedText;

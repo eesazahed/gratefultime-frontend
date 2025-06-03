@@ -1,7 +1,7 @@
 import { ScrollViewStyleReset } from "expo-router/html";
 import { type PropsWithChildren } from "react";
 
-export default function Root({ children }: PropsWithChildren) {
+const Root = ({ children }: PropsWithChildren) => {
   return (
     <html lang="en">
       <head>
@@ -16,4 +16,6 @@ export default function Root({ children }: PropsWithChildren) {
       <body>{children}</body>
     </html>
   );
-}
+};
+
+export default Root;
