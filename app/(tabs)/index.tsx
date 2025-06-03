@@ -112,7 +112,7 @@ const Home = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
         <Header title="GratefulTime" fontSize={34} />
-        <View style={{ marginVertical: 20 }}>
+        <View style={{ marginVertical: 20, paddingHorizontal: 10 }}>
           <ThemedText style={{ fontSize: 24, marginBottom: 10 }}>
             Fill out today's journal
           </ThemedText>
