@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -10,7 +10,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import Container from "../../components/ui/Container";
 import { BackendServer } from "@/constants/BackendServer";
 import ThemedText from "@/components/ThemedText";
-import Header from "@/components/ui/Header";
+import Header from "../../components/ui/Header";
 import Markdown from "react-native-markdown-display";
 
 const MonthlySummary = () => {
@@ -19,6 +19,9 @@ const MonthlySummary = () => {
 
   const [summary, setSummary] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [visibleMarkdown, setVisibleMarkdown] = useState<string>("");
+  const [wordIndex, setWordIndex] = useState<number>(0);
 
   useFocusEffect(
     useCallback(() => {
@@ -54,7 +57,10 @@ const MonthlySummary = () => {
             return;
           }
 
-          setSummary(data.summary || "");
+          const fullText = data.summary || "";
+          setSummary(fullText);
+          setVisibleMarkdown("");
+          setWordIndex(0);
         } catch (error) {
           console.error("Error fetching monthly summary:", error);
           setSummary("");
@@ -66,6 +72,28 @@ const MonthlySummary = () => {
       fetchSummary();
     }, [token])
   );
+
+  useEffect(() => {
+    if (!loading && summary) {
+      const words = summary.split(/\s+/);
+      setVisibleMarkdown("");
+      setWordIndex(0);
+
+      const interval = setInterval(() => {
+        setWordIndex((prev) => {
+          const nextIndex = prev + 1;
+          if (nextIndex > words.length) {
+            clearInterval(interval);
+            return prev;
+          }
+          setVisibleMarkdown(words.slice(0, nextIndex).join(" "));
+          return nextIndex;
+        });
+      }, 30);
+
+      return () => clearInterval(interval);
+    }
+  }, [loading, summary]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -79,16 +107,14 @@ const MonthlySummary = () => {
         </TouchableOpacity>
         {loading ? (
           <ActivityIndicator style={{ margin: "auto" }} />
+        ) : summary ? (
+          <Markdown
+            style={{ body: { fontSize: 18, color: "#fff", lineHeight: 30 } }}
+          >
+            {visibleMarkdown}
+          </Markdown>
         ) : (
-          <ThemedText>
-            {summary ? (
-              <Markdown style={{ body: { fontSize: 20, color: "#fff" } }}>
-                {summary}
-              </Markdown>
-            ) : (
-              "No summary available."
-            )}
-          </ThemedText>
+          <ThemedText>No summary available.</ThemedText>
         )}
       </Container>
     </ScrollView>

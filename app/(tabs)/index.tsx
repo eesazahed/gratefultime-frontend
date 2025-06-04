@@ -112,8 +112,8 @@ const Home = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
         <Header title="GratefulTime" fontSize={34} />
-        <View style={{ marginVertical: 20, paddingHorizontal: 10 }}>
-          <ThemedText style={{ fontSize: 24, marginBottom: 10 }}>
+        <View style={{ marginVertical: 24 }}>
+          <ThemedText style={{ fontSize: 24, marginBottom: 8 }}>
             Fill out today's journal
           </ThemedText>
           <LargeLink
@@ -121,8 +121,8 @@ const Home = () => {
             onPress={() => router.push("/(tabs)/grateful")}
           />
         </View>
-        <View style={{ marginVertical: 20 }}>
-          <ThemedText style={{ fontSize: 24, marginBottom: 10 }}>
+        <View style={{ marginVertical: 24 }}>
+          <ThemedText style={{ fontSize: 24, marginBottom: 8 }}>
             Your progress this month
           </ThemedText>
           <LargeLink
@@ -132,8 +132,8 @@ const Home = () => {
             onPress={() => router.push("/(tabs)/calendar")}
           />
         </View>
-        <View style={{ marginVertical: 20 }}>
-          <ThemedText style={{ fontSize: 24, marginBottom: 10 }}>
+        <View style={{ marginVertical: 24 }}>
+          <ThemedText style={{ fontSize: 24, marginBottom: 8 }}>
             Recap your previous entries
           </ThemedText>
           <LargeLink
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   disclaimer: {
     fontSize: 14,
-    paddingTop: 20,
+    paddingTop: 16,
     margin: 8,
     color: "#ccc",
     fontStyle: "italic",
