@@ -140,6 +140,15 @@ const Home = () => {
             title="AI Summary"
             onPress={() => router.push("/(tabs)/monthlysummary")}
           />
+          <ThemedText style={styles.disclaimer}>
+            Learn more in our{" "}
+            <Link
+              style={{ color: "#05c3fc" }}
+              href="https://gratefultime.app#privacypolicy"
+            >
+              privacy policy
+            </Link>
+          </ThemedText>
         </View>
       </Container>
     </ScrollView>
@@ -154,6 +163,13 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     fontWeight: "600",
+  },
+  disclaimer: {
+    fontSize: 14,
+    paddingTop: 16,
+    margin: 8,
+    color: "#ccc",
+    fontStyle: "italic",
   },
   centered: {
     flex: 1,

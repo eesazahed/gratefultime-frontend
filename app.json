@@ -2,7 +2,7 @@
   "expo": {
     "name": "GratefulTime",
     "slug": "gratefultime",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/images/applogo.png",
     "scheme": "myapp",

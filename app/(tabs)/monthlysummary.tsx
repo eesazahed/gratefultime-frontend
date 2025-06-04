@@ -18,6 +18,7 @@ const MonthlySummary = () => {
   const router = useRouter();
 
   const [summary, setSummary] = useState<string>("");
+  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [visibleMarkdown, setVisibleMarkdown] = useState<string>("");
@@ -41,28 +42,30 @@ const MonthlySummary = () => {
             },
           });
 
-          if (response.status === 429) {
-            console.warn("Rate limit exceeded");
-            setSummary("Rate limit exceeded. Please try again later.");
-            setLoading(false);
-            return;
-          }
-
           const data = await response.json();
 
-          if (!response.ok) {
-            console.error("Error fetching monthly summary:", data);
+          if (response.status === 429) {
+            console.warn("Rate limit exceeded");
+            setMessage("Rate limit exceeded. Please try again later.");
             setSummary("");
             setLoading(false);
             return;
           }
 
-          const fullText = data.summary || "";
-          setSummary(fullText);
+          if (!response.ok) {
+            setMessage(data.message || "An error occurred");
+            setSummary("");
+            setLoading(false);
+            return;
+          }
+
+          setSummary(data.summary || "");
+          setMessage(null);
           setVisibleMarkdown("");
           setWordIndex(0);
         } catch (error) {
           console.error("Error fetching monthly summary:", error);
+          setMessage("Failed to fetch summary");
           setSummary("");
         } finally {
           setLoading(false);
@@ -107,6 +110,8 @@ const MonthlySummary = () => {
         </TouchableOpacity>
         {loading ? (
           <ActivityIndicator style={{ margin: "auto" }} />
+        ) : message ? (
+          <ThemedText>{message}</ThemedText>
         ) : summary ? (
           <Markdown
             style={{ body: { fontSize: 18, color: "#fff", lineHeight: 30 } }}
@@ -114,7 +119,7 @@ const MonthlySummary = () => {
             {visibleMarkdown}
           </Markdown>
         ) : (
-          <ThemedText>No summary available.</ThemedText>
+          <ThemedText>No summary available</ThemedText>
         )}
       </Container>
     </ScrollView>
