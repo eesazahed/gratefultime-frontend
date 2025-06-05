@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
 import { BackendServer } from "@/constants/BackendServer";
 import ThemedText from "./ThemedText";
+import { timezones } from "@/constants/timezones";
 
 const AppleSignInPage = () => {
   const router = useRouter();
@@ -25,7 +26,11 @@ const AppleSignInPage = () => {
         ],
       });
 
-      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+      if (!timezones.includes(userTimezone)) {
+        userTimezone = "America/New_York";
+      }
 
       const response = await fetch(`${BackendServer}/auth/applelogin`, {
         method: "POST",
