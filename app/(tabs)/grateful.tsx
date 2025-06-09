@@ -37,6 +37,7 @@ const Grateful = () => {
   const [isLocked, setIsLocked] = useState(true);
   const [hasSubmittedToday, setHasSubmittedToday] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [errors, setErrors] = useState<Errors>({
     entry1: "",
@@ -118,12 +119,15 @@ const Grateful = () => {
   };
 
   const saveEntries = async () => {
+    setSaving(true);
+
     if (!token) {
       console.error("No token found");
       setErrors((prev) => ({
         ...prev,
         submission: "User is not authenticated. Please log in.",
       }));
+      setSaving(false);
       return;
     }
 
@@ -149,6 +153,7 @@ const Grateful = () => {
           ...prev,
           submission: "Rate limit exceeded. Please try again shortly.",
         }));
+        setSaving(false);
         return;
       }
 
@@ -179,6 +184,7 @@ const Grateful = () => {
         }
 
         setErrors(newErrors);
+        setSaving(false);
         return;
       }
 
@@ -193,6 +199,7 @@ const Grateful = () => {
         promptResponse: "",
         submission: "",
       });
+      setSaving(false);
     } catch (error) {
       console.error("Network error:", error);
       setErrors((prev) => ({
@@ -294,7 +301,7 @@ const Grateful = () => {
           </ThemedText>
         ) : null}
         <Button
-          title="Save Entry"
+          title={saving ? "Saving..." : "Save Entry"}
           onPress={saveEntries}
           style={{
             ...styles.saveButton,
