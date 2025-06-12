@@ -88,6 +88,7 @@ const DayGrid = ({
 const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: "column",
+    minHeight: 300,
   },
   row: {
     flexDirection: "row",

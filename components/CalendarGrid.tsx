@@ -177,7 +177,6 @@ const CalendarGrid = ({
 const styles = StyleSheet.create({
   calendarAndButtons: {
     justifyContent: "space-between",
-    minHeight: 380,
   },
 });
 

@@ -128,7 +128,7 @@ const MonthlySummary = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 200,
+    paddingBottom: 100,
   },
   goBack: {
     textAlign: "center",

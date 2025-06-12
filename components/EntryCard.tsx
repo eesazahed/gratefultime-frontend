@@ -50,7 +50,7 @@ const EntryCard = ({ entry, showDelete = false, onDelete }: EntryCardProps) => {
 
 const styles = StyleSheet.create({
   entryContainer: {
-    marginVertical: 20,
+    marginVertical: 15,
     backgroundColor: "#1c1c1c",
     borderRadius: 20,
     paddingHorizontal: 20,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 15,
   },
   dateText: {

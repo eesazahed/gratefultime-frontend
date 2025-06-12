@@ -112,8 +112,8 @@ const Home = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <Container>
         <Header title="GratefulTime" fontSize={34} />
-        <View style={{ marginVertical: 24 }}>
-          <ThemedText style={{ fontSize: 24, marginBottom: 8 }}>
+        <View style={{ marginVertical: 22 }}>
+          <ThemedText style={{ fontSize: 22, marginBottom: 6, marginLeft: 1 }}>
             Fill out today's journal
           </ThemedText>
           <LargeLink
@@ -121,8 +121,8 @@ const Home = () => {
             onPress={() => router.push("/(tabs)/grateful")}
           />
         </View>
-        <View style={{ marginVertical: 24 }}>
-          <ThemedText style={{ fontSize: 24, marginBottom: 8 }}>
+        <View style={{ marginVertical: 22 }}>
+          <ThemedText style={{ fontSize: 22, marginBottom: 6, marginLeft: 1 }}>
             Your progress this month
           </ThemedText>
           <LargeLink
@@ -132,8 +132,8 @@ const Home = () => {
             onPress={() => router.push("/(tabs)/calendar")}
           />
         </View>
-        <View style={{ marginVertical: 24 }}>
-          <ThemedText style={{ fontSize: 24, marginBottom: 8 }}>
+        <View style={{ marginVertical: 22 }}>
+          <ThemedText style={{ fontSize: 22, marginBottom: 6, marginLeft: 1 }}>
             Recap your previous entries
           </ThemedText>
           <LargeLink
@@ -143,7 +143,7 @@ const Home = () => {
           <ThemedText style={styles.disclaimer}>
             Learn more in our{" "}
             <Link
-              style={{ color: "#05c3fc" }}
+              style={{ color: "#05c3fc", textDecorationLine: "underline" }}
               href="https://gratefultime.app#privacypolicy"
             >
               privacy policy
@@ -156,7 +156,7 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, paddingBottom: 200 },
+  container: { flexGrow: 1, paddingBottom: 150 },
   loginContainer: {
     justifyContent: "center",
   },

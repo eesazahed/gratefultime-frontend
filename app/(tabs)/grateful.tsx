@@ -261,7 +261,7 @@ const Grateful = () => {
           const errorKey: EntryKey = `entry${i + 1}` as EntryKey;
           return (
             <Input
-              maxLength={50}
+              maxLength={100}
               key={i}
               value={entry}
               placeholder={`Gratitude #${i + 1}`}
@@ -276,7 +276,7 @@ const Grateful = () => {
         })}
         <ThemedText style={styles.prompt}>{gratefulnessPrompt}</ThemedText>
         <TextArea
-          maxLength={100}
+          maxLength={200}
           placeholder="Write a short reflection..."
           value={promptResponse}
           onChangeText={setPromptResponse}
