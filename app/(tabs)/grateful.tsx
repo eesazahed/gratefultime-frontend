@@ -206,6 +206,7 @@ const Grateful = () => {
         ...prev,
         submission: "Could not connect to server.",
       }));
+      setSaving(false);
     }
   };
 
