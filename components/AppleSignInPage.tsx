@@ -61,7 +61,7 @@ const AppleSignInPage = () => {
       router.push("/");
     } catch (error) {
       console.error("Apple sign-in error:", error);
-      setErrorMessage("Please try signing in in again");
+      setErrorMessage("Please try signing in again");
     }
   };
 
